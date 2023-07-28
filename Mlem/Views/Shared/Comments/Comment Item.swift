@@ -85,6 +85,11 @@ struct CommentItem: View {
     // MARK: Body
 
     var body: some View {
+        // swiftlint:disable redundant_discardable_let
+        let _ = Self._printChanges()
+        let _ = print("redrawing comment item view")
+        let _ = print("* * *")
+        // swiftlint:enable redundant_discardable_let
         if !isCollapsed {
             VStack(spacing: 0) {
                 commentBody(hierarchicalComment: self.hierarchicalComment)

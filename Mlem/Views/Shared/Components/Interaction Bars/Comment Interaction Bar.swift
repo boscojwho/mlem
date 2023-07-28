@@ -45,6 +45,11 @@ struct CommentInteractionBar: View {
     let height: CGFloat = 24
 
     var body: some View {
+        // swiftlint:disable redundant_discardable_let
+        let _ = Self._printChanges()
+        let _ = print("redrawing comment interaction bar view")
+        let _ = print("* * *")
+        // swiftlint:enable redundant_discardable_let
         ZStack {
             HStack(spacing: 12) {
                 if !shouldShowVoteComplexOnRight {

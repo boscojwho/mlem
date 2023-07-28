@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct CommentBodyView: View {
-    @AppStorage("shouldShowUserServerInComment") var shouldShowUserServerInComment: Bool = false
+//    @AppStorage("shouldShowUserServerInComment") var shouldShowUserServerInComment: Bool = false
     
     let commentView: APICommentView
     let isCollapsed: Bool
@@ -35,13 +35,18 @@ struct CommentBodyView: View {
     }
     
     var body: some View {
+        // swiftlint:disable redundant_discardable_let
+        let _ = Self._printChanges()
+        let _ = print("redrawing comment body view")
+        let _ = print("* * *")
+        // swiftlint:enable redundant_discardable_let
         VStack(alignment: .leading, spacing: AppConstants.postAndCommentSpacing) {
             // TEMPORARILY DISABLED: hiding comment creator--doesn't appear to be used anywhere in the code?
             // if showCommentCreator {
             HStack {
                 UserProfileLink(
                     user: commentView.creator,
-                    serverInstanceLocation: shouldShowUserServerInComment ? .bottom : .disabled,
+                    serverInstanceLocation: .bottom, // shouldShowUserServerInComment ? .bottom : .disabled,
                     postContext: commentView.post,
                     commentContext: commentView.comment
                 )

@@ -211,20 +211,101 @@ struct MarkdownBlock: Identifiable {
     let id: Int
 }
 
+extension String {
+    
+    static func parseMarkdownForImages(text: String) -> [MarkdownBlock] {
+        // this will capture the "![label](url)" pattern so we can hanble it separately
+        let imageLooker = Regex {
+            "!["
+            Capture {
+                ZeroOrMore(.any, .reluctant) // captures the label of the image
+            }
+            "]("
+            Capture {
+                ZeroOrMore(.any, .reluctant) // captures the url of the image
+            }
+            ")"
+        }
+            .ignoresCase()
+        
+        var blocks: [MarkdownBlock] = .init()
+        var idx: String.Index = .init(utf16Offset: 0, in: text)
+        var blockId: Int = 0
+        while idx < text.endIndex {
+            do {
+                if let firstImage = try imageLooker.firstMatch(in: text[idx...]) {
+                    // if there is some image found, add it to blocks
+                    if firstImage.range.lowerBound == idx {
+                        // if the regex starts *right here*, add to images
+                        blocks.append(MarkdownBlock(text: firstImage.output.2, isImage: true, id: blockId))
+                        blockId += 1
+                    } else {
+                        // otherwise, add text in between, then first match
+                        blocks.append(MarkdownBlock(text: text[idx..<firstImage.range.lowerBound], isImage: false, id: blockId))
+                        blockId += 1
+                        blocks.append(MarkdownBlock(text: firstImage.output.2, isImage: true, id: blockId))
+                        blockId += 1
+                    }
+                    idx = firstImage.range.upperBound
+                } else {
+                    // if no image found, add the rest of the text to blocks, if it exists
+                    let remainder = text[idx...]
+                    if !remainder.isEmpty { blocks.append(MarkdownBlock(text: remainder, isImage: false, id: blockId)) }
+                    blockId += 1
+                    idx = text.endIndex // softly end loop
+                }
+            } catch {
+                print("regex error occurred!")
+            }
+        }
+        
+        return blocks
+    }
+}
+
 struct MarkdownView: View {
 
-    @State var text: String
+    let text: String
     let isNsfw: Bool
     let replaceImagesWithEmoji: Bool
+    
+    let markdownBlocks: [MarkdownBlock]
+    let markdownText: MarkdownContent
     
     init(text: String, isNsfw: Bool, replaceImagesWithEmoji: Bool = false) {
         self.text = text
         self.isNsfw = isNsfw
         self.replaceImagesWithEmoji = replaceImagesWithEmoji
+        
+        markdownBlocks = String.parseMarkdownForImages(text: text)
+        markdownText = .init(text)
     }
 
     var body: some View {
-        generateView()
+        // swiftlint:disable redundant_discardable_let
+        let _ = Self._printChanges()
+        let _ = print("redrawing markdown view")
+        let _ = print("* * *")
+        // swiftlint:enable redundant_discardable_let
+        VStack {
+            ForEach(markdownBlocks) { block in
+                if block.isImage {
+                    if replaceImagesWithEmoji {
+                        getMarkdown(text: AppConstants.pictureEmoji.randomElement() ?? "🖼️")
+                    } else {
+                        CachedImage(url: URL(string: String(block.text)))
+                            .applyNsfwOverlay(isNsfw)
+                    }
+                } else {
+                    getMarkdown(text: String(block.text))
+                }
+            }
+        }
+
+//        Markdown(markdownText)
+//            .frame(maxWidth: .infinity, alignment: .topLeading)
+//            .markdownTheme(.mlem)
+//        generateView()
     }
 
     @MainActor func generateView() -> some View {
