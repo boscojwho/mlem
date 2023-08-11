@@ -138,7 +138,7 @@ class FeedTracker<Item: FeedTrackerItem>: ObservableObject {
     // MARK: - Private methods
 
     /// A method to reset the tracker to it's initial state
-    @MainActor private func reset(
+    @MainActor func reset(
         with newItems: [Item] = .init(),
         filteredWith filter: @escaping (_: Item) -> Bool = { _ in true }
     ) {

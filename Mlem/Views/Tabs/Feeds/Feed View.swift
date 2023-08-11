@@ -9,6 +9,27 @@ import Foundation
 import SwiftUI
 import Dependencies
 
+// Our custom view modifier to track rotation and
+// call our action
+struct DeviceRotationViewModifier: ViewModifier {
+    let action: (UIDeviceOrientation) -> Void
+    
+    func body(content: Content) -> some View {
+        content
+            .onAppear()
+            .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+                action(UIDevice.current.orientation)
+            }
+    }
+}
+
+// A View wrapper to make the modifier easier to use
+extension View {
+    func onRotate(perform action: @escaping (UIDeviceOrientation) -> Void) -> some View {
+        self.modifier(DeviceRotationViewModifier(action: action))
+    }
+}
+
 struct FeedView: View {
     
     // MARK: Environment and settings
@@ -97,6 +118,19 @@ struct FeedView: View {
                 }
             }
             .refreshable { await refreshFeed() }
+            .onRotate { rotate in
+                if rotate == .portrait {
+                    isLoading = true
+                    postTracker.reset()
+                    Task {
+                        await refreshFeed()
+                        try? await Task.sleep(nanoseconds: 2_000_000_000)
+                        Task { @MainActor in
+                            isLoading = false
+                        }
+                    }
+                }
+            }
     }
     
     @ViewBuilder
