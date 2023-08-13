@@ -16,6 +16,7 @@ struct ContentView: View {
     @Dependency(\.personRepository) var personRepository
     @Dependency(\.hapticManager) var hapticManager
     
+    @EnvironmentObject private var tabBarTraits: TabBarTraits
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var accountsTracker: SavedAccountTracker
     
@@ -32,10 +33,8 @@ struct ContentView: View {
     
     @State private var isPresentingAccountSwitcher: Bool = false
     
-    @AppStorage("showInboxUnreadBadge") var showInboxUnreadBadge: Bool = true
     @AppStorage("homeButtonExists") var homeButtonExists: Bool = false
-    @AppStorage("profileTabLabel") var profileTabLabel: ProfileTabLabel = .username
-    
+        
     var accessibilityFont: Bool { UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory }
     
     var body: some View {
@@ -52,7 +51,7 @@ struct ContentView: View {
                         FancyTabBarLabel(tag: TabSelection.inbox,
                                          symbolName: "mail.stack",
                                          activeSymbolName: "mail.stack.fill",
-                                         badgeCount: showInboxUnreadBadge ? unreadTracker.total : 0)
+                                         badgeCount: tabBarTraits.showInboxUnreadBadge ? unreadTracker.total : 0)
                     }
                 
                 ProfileView(userID: appState.currentActiveAccount.id)
@@ -139,7 +138,7 @@ struct ContentView: View {
     }
     
     func computeUsername(account: SavedAccount) -> String {
-        switch profileTabLabel {
+        switch tabBarTraits.profileTabLabel {
         case .username: return account.username
         case .instance: return account.hostName ?? account.username
         case .nickname: return appState.currentNickname

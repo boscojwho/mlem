@@ -12,9 +12,10 @@ import XCTestDynamicOverlay
 
 @main
 struct MlemApp: App {
-    @AppStorage("lightOrDarkMode") var lightOrDarkMode: UIUserInterfaceStyle = .unspecified
     @AppStorage("homeButtonExists") var homeButtonExists: Bool = false
 
+    @StateObject private var appearanceTraits: AppearanceTraits = .preferred
+    @StateObject private var tabBarTraits: TabBarTraits = .preferred
     @StateObject var accountsTracker: SavedAccountTracker = .init()
 
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -23,6 +24,8 @@ struct MlemApp: App {
         WindowGroup {
             if !_XCTIsTesting {
                 Window(selectedAccount: accountsTracker.defaultAccount)
+                    .environmentObject(appearanceTraits)
+                    .environmentObject(tabBarTraits)
                     .environmentObject(accountsTracker)
                     .onAppear {
                         var imageConfig = ImagePipeline.Configuration.withDataCache(name: "main", sizeLimit: AppConstants.cacheSize)
@@ -49,7 +52,7 @@ struct MlemApp: App {
                         
                         // set app theme to user preference
                         let windowScene =  UIApplication.shared.connectedScenes.first as? UIWindowScene
-                        windowScene?.windows.first?.overrideUserInterfaceStyle = lightOrDarkMode
+                        windowScene?.windows.first?.overrideUserInterfaceStyle = appearanceTraits.lightOrDarkMode
                         
                         let appearance = UITabBarAppearance()
                         appearance.backgroundEffect = UIBlurEffect.init(style: .systemThinMaterial)
@@ -66,7 +69,7 @@ struct MlemApp: App {
                     }
             }
         }
-        .onChange(of: lightOrDarkMode) { value in
+        .onChange(of: appearanceTraits.lightOrDarkMode) { value in
             let windowScene =  UIApplication.shared.connectedScenes.first as? UIWindowScene
             windowScene?.windows.first?.overrideUserInterfaceStyle = value
         }

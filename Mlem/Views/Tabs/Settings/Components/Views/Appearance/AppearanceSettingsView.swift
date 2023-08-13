@@ -9,15 +9,15 @@ import SwiftUI
 
 struct AppearanceSettingsView: View {
 
-    @AppStorage("lightOrDarkMode") var lightOrDarkMode: UIUserInterfaceStyle = .unspecified
-    
+    @EnvironmentObject private var appearanceTraits: AppearanceTraits
+        
     var body: some View {
         List {
             Section {
                 NavigationLink {
                     ThemeSettingsView()
                 } label: {
-                    switch lightOrDarkMode {
+                    switch appearanceTraits.lightOrDarkMode {
                     case .unspecified:
                         ThemeLabel(title: "Theme", color1: .white, color2: .black)
                     case .light:

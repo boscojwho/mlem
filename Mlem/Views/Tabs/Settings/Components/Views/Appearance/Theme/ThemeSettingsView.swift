@@ -54,11 +54,12 @@ struct ThemeLabel: View {
 }
 
 struct ThemeSettingsView: View {
-    @AppStorage("lightOrDarkMode") var lightOrDarkMode: UIUserInterfaceStyle = .unspecified
+    
+    @EnvironmentObject private var appearanceTraits: AppearanceTraits
     
     var body: some View {
         List {
-            Picker("Appearance", selection: $lightOrDarkMode) {
+            Picker("Appearance", selection: $appearanceTraits.lightOrDarkMode) {
                 ThemeLabel(title: "Light", color1: .white)
                     .tag(UIUserInterfaceStyle.light)
                 ThemeLabel(title: "Dark", color1: .black)

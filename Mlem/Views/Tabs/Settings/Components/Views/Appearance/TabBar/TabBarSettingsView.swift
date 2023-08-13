@@ -8,24 +8,22 @@
 import SwiftUI
 
 struct TabBarSettingsView: View {
-    @AppStorage("profileTabLabel") var profileTabLabel: ProfileTabLabel = .username
-    @AppStorage("showTabNames") var showTabNames: Bool = true
-    @AppStorage("showInboxUnreadBadge") var showInboxUnreadBadge: Bool = true
-        
+    
+    @EnvironmentObject private var tabBarTraits: TabBarTraits
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var savedAccountTracker: SavedAccountTracker
     
     @State var textFieldEntry: String = ""
-    
+        
     var body: some View {
         Form {
             Section {
                 SelectableSettingsItem(settingIconSystemName: "person.text.rectangle",
                                        settingName: "Profile Tab Label",
-                                       currentValue: $profileTabLabel,
+                                       currentValue: $tabBarTraits.profileTabLabel,
                                        options: ProfileTabLabel.allCases)
                 
-                if profileTabLabel == .nickname {
+                if tabBarTraits.profileTabLabel == .nickname {
                     Label {
                         TextField(text: $textFieldEntry, prompt: Text(appState.currentNickname)) {
                             Text("Nickname")
@@ -48,17 +46,17 @@ struct TabBarSettingsView: View {
             Section {
                 SwitchableSettingsItem(settingPictureSystemName: "tag",
                                        settingName: "Show Tab Labels",
-                                       isTicked: $showTabNames)
+                                       isTicked: $tabBarTraits.showTabNames)
                 
                 SwitchableSettingsItem(settingPictureSystemName: "envelope.badge",
                                        settingName: "Show Unread Count",
-                                       isTicked: $showInboxUnreadBadge)
+                                       isTicked: $tabBarTraits.showInboxUnreadBadge)
             }
         }
         .fancyTabScrollCompatible()
         .navigationTitle("Tab Bar")
         .navigationBarColor()
-        .animation(.easeIn, value: profileTabLabel)
+        .animation(.easeIn, value: tabBarTraits.profileTabLabel)
         .onChange(of: appState.currentActiveAccount.nickname) { nickname in
             print("new nickname: \(nickname)")
             textFieldEntry = nickname // appState.currentActiveAccount.nickname
