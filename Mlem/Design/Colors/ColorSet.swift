@@ -8,16 +8,6 @@
 import Foundation
 import SwiftUI
 
-/// ColorScheme refers to the system-wide appeareance settings that is customizable on various platforms and devices.
-///
-/// For color customization, see `ColorSet`.
-//enum ColorScheme: String {
-//    case automatic
-//    case light
-//    /// - NOTE: True Dark appearance is a togglable trait on `AppearanceTraits`.
-//    case dark
-//}
-
 extension ColorScheme {
     
 }
@@ -110,8 +100,8 @@ struct SystemDarkColorSet: ColorSet {
     
     var accentColor: Color = .accentColor
     
-    var systemBackground: Color = .systemBackground
-    var secondarySystemBackground: Color = .secondarySystemBackground
+    var systemBackground: Color = .secondarySystemBackground
+    var secondarySystemBackground: Color = .tertiarySystemBackground
     var tertiarySystemBackground: Color = .tertiarySystemBackground
     
     var upvoteColor: Color = .blue

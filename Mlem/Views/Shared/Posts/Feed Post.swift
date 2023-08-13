@@ -43,10 +43,14 @@ struct FeedPost: View {
     @AppStorage("reakMarkStyle") var readMarkStyle: ReadMarkStyle = .bar
     @AppStorage("readBarThickness") var readBarThickness: Int = 3
 
+    @EnvironmentObject var appearanceTraits: AppearanceTraits
+    @EnvironmentObject var colorSetTraits: ColorSetTraits
     @EnvironmentObject var postTracker: PostTracker
     @EnvironmentObject var editorTracker: EditorTracker
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var layoutWidgetTracker: LayoutWidgetTracker
+    
+    @Environment(\.colorScheme) var colorScheme
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
     @State var dirtyVote: ScoringOperation = .resetVote
@@ -89,7 +93,11 @@ struct FeedPost: View {
         VStack(spacing: 0) {
             postItem
                 .border(width: barThickness, edges: [.leading], color: .secondary)
-                .background(Color.systemBackground)
+                .background(
+                    colorSetTraits
+                        .currentColorSet(for: colorScheme, appearanceTraits: appearanceTraits)
+                        .systemBackground
+                )
 //                .background(horizontalSizeClass == .regular ? Color.secondarySystemBackground : Color.systemBackground)
 //                .clipShape(RoundedRectangle(cornerRadius: horizontalSizeClass == .regular ? 16 : 0))
 //                .padding(.all, horizontalSizeClass == .regular ? nil : 0)

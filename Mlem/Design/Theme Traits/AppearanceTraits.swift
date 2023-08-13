@@ -23,5 +23,5 @@ final class AppearanceTraits: ObservableObject {
     @AppStorage(StorageKey.lightOrDarkMode.rawValue) var lightOrDarkMode: UIUserInterfaceStyle = .unspecified
     /// If `false`, `.dark` appeareance is rendered with more contrasting colors.
     /// - NOTE: True Dark appearance is a color variant of `ColorScheme.dark`.
-    @AppStorage(StorageKey.useTrueDark.rawValue) var useTrueDark: Bool = true
+    @AppStorage(StorageKey.useTrueDark.rawValue) var useTrueDark: Bool = false
 }

@@ -69,6 +69,12 @@ struct ThemeSettingsView: View {
             }
             .labelsHidden()
             .pickerStyle(.inline)
+            
+            if appearanceTraits.lightOrDarkMode == .dark {
+                Toggle(isOn: $appearanceTraits.useTrueDark) {
+                    Text("Use True Dark")
+                }
+            }
         }
         .fancyTabScrollCompatible()
         .navigationTitle("Theme")
