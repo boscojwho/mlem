@@ -14,8 +14,12 @@ import XCTestDynamicOverlay
 struct MlemApp: App {
     @AppStorage("homeButtonExists") var homeButtonExists: Bool = false
 
+    @Environment(\.colorScheme) private var colorScheme
+    
     @StateObject private var appearanceTraits: AppearanceTraits = .preferred
     @StateObject private var tabBarTraits: TabBarTraits = .preferred
+    @StateObject private var colorSetTraits: ColorSetTraits = .preferred
+    
     @StateObject var accountsTracker: SavedAccountTracker = .init()
 
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -26,6 +30,7 @@ struct MlemApp: App {
                 Window(selectedAccount: accountsTracker.defaultAccount)
                     .environmentObject(appearanceTraits)
                     .environmentObject(tabBarTraits)
+                    .environmentObject(colorSetTraits)
                     .environmentObject(accountsTracker)
                     .onAppear {
                         var imageConfig = ImagePipeline.Configuration.withDataCache(name: "main", sizeLimit: AppConstants.cacheSize)

@@ -376,6 +376,8 @@
 		E453A1D02A81C2140004BB8A /* QuickLookPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453A1CF2A81C2140004BB8A /* QuickLookPreviewController.swift */; };
 		E47B3EF12A88AD140088A09E /* AppearanceTraits.swift in Sources */ = {isa = PBXBuildFile; fileRef = E47B3EF02A88AD140088A09E /* AppearanceTraits.swift */; };
 		E47B3EF52A88BD190088A09E /* TabBarTraits.swift in Sources */ = {isa = PBXBuildFile; fileRef = E47B3EF42A88BD190088A09E /* TabBarTraits.swift */; };
+		E47B3EF92A88C5450088A09E /* ColorSetTraits.swift in Sources */ = {isa = PBXBuildFile; fileRef = E47B3EF82A88C5450088A09E /* ColorSetTraits.swift */; };
+		E47B3EFC2A88C9400088A09E /* ColorSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E47B3EFB2A88C9400088A09E /* ColorSet.swift */; };
 		E4D4DBA02A7C7B9D00C4F3DE /* Comments.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D4DB9F2A7C7B9D00C4F3DE /* Comments.swift */; };
 		E4D4DBA22A7F233200C4F3DE /* FancyTabNavigationSelectionHashValueEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D4DBA12A7F233200C4F3DE /* FancyTabNavigationSelectionHashValueEnvironmentKey.swift */; };
 		E4DDB4322A81819300B3A7E0 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DDB4312A81819300B3A7E0 /* Double.swift */; };
@@ -767,6 +769,8 @@
 		E453A1CF2A81C2140004BB8A /* QuickLookPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLookPreviewController.swift; sourceTree = "<group>"; };
 		E47B3EF02A88AD140088A09E /* AppearanceTraits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceTraits.swift; sourceTree = "<group>"; };
 		E47B3EF42A88BD190088A09E /* TabBarTraits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarTraits.swift; sourceTree = "<group>"; };
+		E47B3EF82A88C5450088A09E /* ColorSetTraits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSetTraits.swift; sourceTree = "<group>"; };
+		E47B3EFB2A88C9400088A09E /* ColorSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSet.swift; sourceTree = "<group>"; };
 		E4D4DB9F2A7C7B9D00C4F3DE /* Comments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comments.swift; sourceTree = "<group>"; };
 		E4D4DBA12A7F233200C4F3DE /* FancyTabNavigationSelectionHashValueEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FancyTabNavigationSelectionHashValueEnvironmentKey.swift; sourceTree = "<group>"; };
 		E4DDB4312A81819300B3A7E0 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
@@ -1984,6 +1988,7 @@
 		E47B3EED2A88AA6C0088A09E /* Design */ = {
 			isa = PBXGroup;
 			children = (
+				E47B3EFA2A88C9310088A09E /* Colors */,
 				E47B3EEF2A88AA7A0088A09E /* Theme Traits */,
 				E47B3EEE2A88AA720088A09E /* Layout Metrics */,
 			);
@@ -2001,9 +2006,18 @@
 			isa = PBXGroup;
 			children = (
 				E47B3EF02A88AD140088A09E /* AppearanceTraits.swift */,
+				E47B3EF82A88C5450088A09E /* ColorSetTraits.swift */,
 				E47B3EF42A88BD190088A09E /* TabBarTraits.swift */,
 			);
 			path = "Theme Traits";
+			sourceTree = "<group>";
+		};
+		E47B3EFA2A88C9310088A09E /* Colors */ = {
+			isa = PBXGroup;
+			children = (
+				E47B3EFB2A88C9400088A09E /* ColorSet.swift */,
+			);
+			path = Colors;
 			sourceTree = "<group>";
 		};
 		E4D4DB9E2A7C7A5800C4F3DE /* Animations */ = {
@@ -2452,6 +2466,7 @@
 				CD1446182A58FC3B00610EF1 /* InfoStackView.swift in Sources */,
 				CDE9CE4F2A7B0B1B002B97DD /* Haptic.swift in Sources */,
 				CD6483A62A82FAF200A5AE84 /* ProfileTabLabel.swift in Sources */,
+				E47B3EF92A88C5450088A09E /* ColorSetTraits.swift in Sources */,
 				6386E0402A045723006B3C1D /* Website Icon Complex.swift in Sources */,
 				5064D0412A6E63E000B22EE3 /* Task+Notifiable.swift in Sources */,
 				63F0C7BD2A058CD200A18C5D /* Check if Endpoint Exists.swift in Sources */,
@@ -2465,6 +2480,7 @@
 				B1A26FE32A45B11800B91A32 /* View - Handle Lemmy Links.swift in Sources */,
 				03B643572A6864CD00F65700 /* TabBarSettingsView.swift in Sources */,
 				CDF842642A49EAFA00723DA0 /* GetPersonMentions.swift in Sources */,
+				E47B3EFC2A88C9400088A09E /* ColorSet.swift in Sources */,
 				6D405B052A43E82300C65F9C /* Sidebar Header.swift in Sources */,
 				63E5D38D2A13BCDE00EC1FBD /* Community Search Result Tracker.swift in Sources */,
 				CDA217F32A63202600BDA173 /* NSFW Overlay.swift in Sources */,
