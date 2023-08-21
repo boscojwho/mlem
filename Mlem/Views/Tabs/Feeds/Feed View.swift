@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 import Dependencies
 
-// swiftlint:disable type_body_length
 struct FeedView: View {
         
     // MARK: Environment and settings
@@ -142,20 +141,20 @@ struct FeedView: View {
                     if newValue == TabSelection.feeds.hashValue {
                         print("re-selected \(TabSelection.feeds) tab")
 #if DEBUG
-                        if navigationPath.wrappedValue.isEmpty {
-                            if scrollToTopAppeared {
-                                /// Already scrolled to top: Pop to sidebar.
-                                withAnimation {
-                                    rootDetails = nil
-                                }
-                            } else {
-                                withAnimation {
-                                    scrollViewProxy?.scrollTo(scrollToTop, anchor: .top)
-                                }
-                            }
-                        } else {
-                            navigationPath.wrappedValue.goBack()
-                        }
+//                        if navigationPath.wrappedValue.isEmpty {
+//                            if scrollToTopAppeared {
+//                                /// Already scrolled to top: Pop to sidebar.
+//                                withAnimation {
+//                                    rootDetails = nil
+//                                }
+//                            } else {
+//                                withAnimation {
+//                                    scrollViewProxy?.scrollTo(scrollToTop, anchor: .top)
+//                                }
+//                            }
+//                        } else {
+//                            navigationPath.wrappedValue.goBack()
+//                        }
 #endif
                     }
                 }
@@ -311,4 +310,3 @@ struct FeedView: View {
         }
     }
 }
-// swiftlint:enable type_body_length

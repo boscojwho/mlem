@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIIntrospect
 
 struct SettingsView: View {
 
@@ -85,6 +86,10 @@ struct SettingsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .useSettingsNavigationRouter()
         }
+        .introspect(.navigationStack, on: .iOS(.v16), scope: nil, customize: { view in
+            print(view.viewControllers)
+            view.hidesBarsOnSwipe = true
+        })
         .handleLemmyLinkResolution(navigationPath: $navigationPath)
         .onChange(of: selectedTagHashValue) { newValue in
             if newValue == TabSelection.settings.hashValue {

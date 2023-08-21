@@ -375,6 +375,7 @@
 		CDF8426B2A4A2AB600723DA0 /* Inbox Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF8426A2A4A2AB600723DA0 /* Inbox Item.swift */; };
 		CDF8426F2A4A385A00723DA0 /* Inbox Item Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF8426E2A4A385A00723DA0 /* Inbox Item Type.swift */; };
 		E453A1D02A81C2140004BB8A /* QuickLookPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453A1CF2A81C2140004BB8A /* QuickLookPreviewController.swift */; };
+		E45C30982A93529200DB3087 /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = E45C30972A93529200DB3087 /* SwiftUIIntrospect */; };
 		E47B2B762A902DE200629AF7 /* SettingsRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E47B2B752A902DE200629AF7 /* SettingsRoutes.swift */; };
 		E4902BAB2A9024BF0054FB36 /* SettingsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4902BAA2A9024BF0054FB36 /* SettingsRouter.swift */; };
 		E49F0E762A90395400BC4EE3 /* NavigationPath+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49F0E752A90395400BC4EE3 /* NavigationPath+Helpers.swift */; };
@@ -791,6 +792,7 @@
 				636250DC2A18111400FC59B4 /* KeychainAccess in Frameworks */,
 				B104A6DE2A59BF3C00B3E725 /* NukeVideo in Frameworks */,
 				B104A6DC2A59BF3C00B3E725 /* NukeUI in Frameworks */,
+				E45C30982A93529200DB3087 /* SwiftUIIntrospect in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2048,6 +2050,7 @@
 				B104A6DB2A59BF3C00B3E725 /* NukeUI */,
 				B104A6DD2A59BF3C00B3E725 /* NukeVideo */,
 				50C99B552A61D792005D57DD /* Dependencies */,
+				E45C30972A93529200DB3087 /* SwiftUIIntrospect */,
 			);
 			productName = Mlem;
 			productReference = 6363D5C127EE196700E34822 /* Mlem.app */;
@@ -2126,6 +2129,7 @@
 				636250DA2A18111400FC59B4 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				B104A6D62A59BF3C00B3E725 /* XCRemoteSwiftPackageReference "Nuke" */,
 				50C99B542A61D792005D57DD /* XCRemoteSwiftPackageReference "swift-dependencies" */,
+				E45C30962A93529200DB3087 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 			);
 			productRefGroup = 6363D5C227EE196700E34822 /* Products */;
 			projectDirPath = "";
@@ -2945,6 +2949,14 @@
 				minimumVersion = 12.1.2;
 			};
 		};
+		E45C30962A93529200DB3087 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/SwiftUI-Introspect.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.11.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2982,6 +2994,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B104A6D62A59BF3C00B3E725 /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = NukeVideo;
+		};
+		E45C30972A93529200DB3087 /* SwiftUIIntrospect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E45C30962A93529200DB3087 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
+			productName = SwiftUIIntrospect;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -36,6 +36,8 @@ struct ContentView: View {
     @AppStorage("homeButtonExists") var homeButtonExists: Bool = false
     @AppStorage("profileTabLabel") var profileTabLabel: ProfileTabLabel = .username
     
+    @StateObject var navDel = NavDelegate()
+    
     var accessibilityFont: Bool { UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory }
     
     var body: some View {
@@ -77,6 +79,7 @@ struct ContentView: View {
                     }
             }
         }
+        .environmentObject(navDel)
         // TODO: remove once all using `.errorHandler` as the `appState` will no longer receive these...
         .onChange(of: appState.contextualError) { errorHandler.handle($0) }
         .task(id: appState.currentActiveAccount) {

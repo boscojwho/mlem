@@ -6,6 +6,48 @@
 //
 
 import SwiftUI
+import SwiftUIIntrospect
+import UIKit
+
+final class NavDelegate: NSObject, UINavigationControllerDelegate, ObservableObject {
+    
+    private(set) var navigationController: UINavigationController?
+    private(set) var poppedViewController: UIViewController?
+    
+    init(navigationController: UINavigationController? = nil, poppedViewController: UIViewController? = nil) {
+        self.navigationController = navigationController
+        self.poppedViewController = poppedViewController
+    }
+    
+    func goForward() -> UIViewController? {
+        let pop = poppedViewController
+        poppedViewController = nil
+        return pop
+    }
+    
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+//        self.navigationController = navigationController
+    }
+    
+    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        self.navigationController = navigationController
+    }
+    
+    func navigationController(
+        _ navigationController: UINavigationController,
+        animationControllerFor operation: UINavigationController.Operation,
+        from fromVC: UIViewController,
+        to toVC: UIViewController
+    ) -> UIViewControllerAnimatedTransitioning? {
+//        self.navigationController = navigationController
+        
+        if operation == .pop {
+            poppedViewController = fromVC
+        }
+        
+        return nil
+    }
+}
 
 struct FeedRoot: View {
     @EnvironmentObject var appState: AppState
@@ -23,14 +65,16 @@ struct FeedRoot: View {
     
     let showLoading: Bool
     
+    @EnvironmentObject var navDel: NavDelegate
+    
     var body: some View {
         NavigationSplitView {
             CommunityListView(selectedCommunity: $rootDetails)
                 .id(appState.currentActiveAccount.id)
         } detail: {
             if let rootDetails {
-                ScrollViewReader { proxy in
-                    NavigationStack(path: $navigationPath) {
+                NavigationStack(path: $navigationPath) {
+                    ScrollViewReader { proxy in
                         FeedView(
                             community: rootDetails.community,
                             feedType: rootDetails.feedType,
@@ -44,6 +88,9 @@ struct FeedRoot: View {
                     }
                 }
                 .id(rootDetails.id + appState.currentActiveAccount.id)
+                .introspect(.navigationStack, on: .iOS(.v16), scope: .ancestor) { view in
+                    view.delegate = navDel
+                }
             } else {
                 Text("Please select a community") 
             }
@@ -96,6 +143,9 @@ struct FeedRoot: View {
         .onChange(of: selectedNavigationTabHashValue) { newValue in
             if newValue == TabSelection.feeds.hashValue {
                 print("re-selected \(TabSelection.feeds) tab")
+//                if let goForward = navDel.goForward() {
+//                    navDel.navigationController?.pushViewController(goForward, animated: true)
+//                }
             }
         }
     }

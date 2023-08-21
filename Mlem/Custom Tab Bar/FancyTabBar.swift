@@ -27,6 +27,8 @@ struct FancyTabBar<Selection: FancyTabBarSelection, Content: View>: View {
     
     var dragUpGestureCallback: (() -> Void)?
     
+    @EnvironmentObject var navDel: NavDelegate
+    
     init(selection: Binding<Selection>,
          navigationSelection: Binding<NavigationSelection>,
          dragUpGestureCallback: (() -> Void)? = nil,
@@ -114,11 +116,22 @@ struct FancyTabBar<Selection: FancyTabBarSelection, Content: View>: View {
                     self.navigationSelection = TabSelection(index: __tempNavigationSelection)!
 //                }
             }
+//            .gesture(
+//                DragGesture()
+//                    .onChanged { gesture in
+//                        if let callback = dragUpGestureCallback, gesture.translation.height < -50 {
+//                            callback()
+//                        }
+//                    }
+//            )
             .gesture(
                 DragGesture()
-                    .onChanged { gesture in
-                        if let callback = dragUpGestureCallback, gesture.translation.height < -50 {
-                            callback()
+                    .onChanged({ gesture in
+                        print(gesture.location)
+                    })
+                    .onEnded { _ in
+                        if let goForward = navDel.goForward() {
+                            navDel.navigationController?.pushViewController(goForward, animated: true)
                         }
                     }
             )
