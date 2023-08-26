@@ -222,16 +222,20 @@ struct MarkdownBlock: Identifiable {
 }
 
 struct MarkdownView: View {
-    @State var text: String
+    let text: String
     let isNsfw: Bool
     let replaceImagesWithEmoji: Bool
     let isInline: Bool
     
-    init(text: String, isNsfw: Bool, replaceImagesWithEmoji: Bool = false, isInline: Bool = false) {
-        self.text = isInline ? MarkdownView.prepareInlineMarkdown(text: text) : text
+    private let markdownBlocks: [MarkdownBlock]
+    
+    init(text markdownText: String, isNsfw: Bool, replaceImagesWithEmoji: Bool = false, isInline: Bool = false) {
+        self.text = isInline ? MarkdownView.prepareInlineMarkdown(text: markdownText) : markdownText
         self.isNsfw = isNsfw
         self.replaceImagesWithEmoji = replaceImagesWithEmoji
         self.isInline = isInline
+        
+        self.markdownBlocks = String.parseMarkdownForImages(text: self.text)
     }
 
     var body: some View {
@@ -239,11 +243,10 @@ struct MarkdownView: View {
     }
 
     @MainActor func generateView() -> some View {
-        let blocks = String.parseMarkdownForImages(text: text)
         let theme: Theme = isInline ? .plain : .mlem
         
         return VStack {
-            ForEach(blocks) { block in
+            ForEach(markdownBlocks) { block in
                 if block.isImage {
                     if replaceImagesWithEmoji {
                         getMarkdown(text: AppConstants.pictureEmoji.randomElement() ?? "🖼️", theme: theme)
