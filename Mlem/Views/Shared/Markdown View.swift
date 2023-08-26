@@ -239,13 +239,7 @@ struct MarkdownView: View {
     }
 
     var body: some View {
-        generateView()
-    }
-
-    @MainActor func generateView() -> some View {
-        let theme: Theme = isInline ? .plain : .mlem
-        
-        return VStack {
+        VStack {
             ForEach(markdownBlocks) { block in
                 if block.isImage {
                     if replaceImagesWithEmoji {
@@ -261,14 +255,18 @@ struct MarkdownView: View {
         }
     }
     
-    static func prepareInlineMarkdown(text: String) -> String {
+    private var theme: Theme {
+        isInline ? .plain : .mlem
+    }
+    
+    private static func prepareInlineMarkdown(text: String) -> String {
         text
             .components(separatedBy: .newlines)
             .joined(separator: " ")
             .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
     }
     
-    func getMarkdown(text: String, theme: Theme = .mlem) -> some View {
+    private func getMarkdown(text: String, theme: Theme = .mlem) -> some View {
         Markdown(text)
             .frame(maxWidth: .infinity, alignment: .topLeading)
             .markdownTheme(theme)
