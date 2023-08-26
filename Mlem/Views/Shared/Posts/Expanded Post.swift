@@ -8,6 +8,34 @@
 import Dependencies
 import SwiftUI
 
+// swiftlint:disable type_name
+struct NavigationSplitViewSidebarIgnorePresentsWithGesture: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .highPriorityGesture(
+                DragGesture(coordinateSpace: .global)
+                    .onChanged { _ in
+                        // no-op
+                    }
+            )
+    }
+}
+// swiftlint:enable type_name
+
+extension View {
+    
+    @ViewBuilder
+    func sidebarPresentsWithGesture(_ should: Bool) -> some View {
+        self.gesture(
+            DragGesture(coordinateSpace: .global)
+                .onChanged { _ in
+                    // no-op
+                },
+            including: should ? .subviews : .all
+        )
+    }
+}
+
 enum PossibleStyling {
     case bold, italics
 }
@@ -31,6 +59,7 @@ struct ExpandedPost: View {
     @AppStorage("shouldShowSavedInPostBar") var shouldShowSavedInPostBar: Bool = false
     @AppStorage("shouldShowRepliesInPostBar") var shouldShowRepliesInPostBar: Bool = true
 
+    @Environment(\.navigationPath) var navigationPath
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var editorTracker: EditorTracker
     @EnvironmentObject var layoutWidgetTracker: LayoutWidgetTracker
@@ -69,6 +98,10 @@ struct ExpandedPost: View {
                     commentTracker.comments = sortComments(commentTracker.comments, by: newSortingType)
                 }
             }
+        /// This on its own has some effect, but not enough.
+            .defersSystemGestures(on: .leading)
+        /// This, combined with defersSystemGesture (???), pretty much makes sidebar not show up with swipe gesture. It's not 100% effective, since the system appears to use a combination of gesture velocity/location to determine if it should show the sidebar.
+            .sidebarPresentsWithGesture(self.navigationPath.wrappedValue.isEmpty)
     }
     
     private var contentView: some View {

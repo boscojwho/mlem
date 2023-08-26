@@ -83,6 +83,19 @@ struct SwipeyView: ViewModifier {
             .highPriorityGesture(
                 DragGesture(minimumDistance: 20, coordinateSpace: .global) // min distance prevents conflict with scrolling drag gesture
                     .updating($dragState) { value, state, _ in
+                        /// On iPhone, swiping from edge always triggers the system navigation pop back gesture.
+                        /// On iPad, swipey view's gesture seems to hug a little to close to the system sidebar/navigate back gestures, hence we add a check on startLocation.x.
+                        if UIDevice.current.userInterfaceIdiom == .pad {
+                            guard value.startLocation.x >= 0 else {
+                                print("ignoring swipey view gesture on leading screen edge")
+                                return
+                            }
+                            
+                            if value.startLocation.x < 0 {
+                                print("swipey view gesture began at .x < 0")
+                            }
+                        }
+                        
                         // this check adds a dead zone to the left side of the screen so it doesn't interfere with navigation
                         if dragState != .zero || value.location.x > 70 {
                             state = value.translation.width
