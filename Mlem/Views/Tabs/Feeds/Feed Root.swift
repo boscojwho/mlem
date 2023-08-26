@@ -27,7 +27,7 @@ struct FeedRoot: View {
         NavigationSplitView {
             CommunityListView(selectedCommunity: $rootDetails)
                 .id(appState.currentActiveAccount.id)
-            /// Not sure.
+            // No effect on its own.
 //                .defersSystemGestures(on: .leading)
         } detail: {
             if let rootDetails {
@@ -38,19 +38,19 @@ struct FeedRoot: View {
                         sortType: defaultPostSorting,
                         showLoading: showLoading
                     )
-                    /// Not sure.
+                    // No effect on its own.
 //                    .defersSystemGestures(on: .leading)
                     .environmentObject(appState)
                     .handleLemmyViews()
                 }
                 .id(rootDetails.id + appState.currentActiveAccount.id)
-                /// Not sure.
+                // No effect on its own.
 //                .defersSystemGestures(on: .leading)
             } else {
                 Text("Please select a community")
             }
         }
-        /// Not sure.
+        // No effect on its own.
 //        .defersSystemGestures(on: .leading)
         .handleLemmyLinkResolution(
             navigationPath: $navigationPath

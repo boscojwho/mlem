@@ -8,31 +8,71 @@
 import Dependencies
 import SwiftUI
 
-// swiftlint:disable type_name
-struct NavigationSplitViewSidebarIgnorePresentsWithGesture: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .highPriorityGesture(
-                DragGesture(coordinateSpace: .global)
-                    .onChanged { _ in
-                        // no-op
-                    }
-            )
-    }
+enum GesturePrecedence {
+    case lower, simultaneous, higher
 }
-// swiftlint:enable type_name
 
 extension View {
     
+    /// - Warning: You must pass a `maskPrecedence` <= to any other gesture(s) defined in subviews.
+    /// - Parameter maskPrecedence: The gesture precedence to use when masking subview gestures.
     @ViewBuilder
-    func sidebarPresentsWithGesture(_ should: Bool) -> some View {
-        self.gesture(
-            DragGesture(coordinateSpace: .global)
-                .onChanged { _ in
-                    // no-op
-                },
-            including: should ? .subviews : .all
-        )
+    func splitViewSidebar(
+        presentsWithGesture: Bool,
+        maskPrecedence: GesturePrecedence = .lower
+    ) -> some View {
+        /*
+         The following techniques on their own have some effect:
+         
+         If there's a (high priority ?) gesture in a subview, thenswipe back to navigate gesture gets activated on a higher velocity swipe.
+         
+         When both techniques are used together, they pretty much make the sidebar not show up with a swipe gesture. It's very close to 100% effective, but not fool-proof, since the system appears to use a combination of gesture velocity/location to determine if it should show the sidebar
+         */
+        self
+            .defersSystemGestures(on: .leading)
+        // High priority gesture completely blocks sidebar gesture, but also causes issues with other high priority gestures in subviews (e.g. swipey view actions).
+        // We'd need to collect all subview gestures if we use high priority, so we can define gesture precedence at the root view level.
+//            .highPriorityGesture(/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Gesture@*/LongPressGesture()/*@END_MENU_TOKEN@*/)
+//            .gesture(/*@START_MENU_TOKEN@*//*@PLACEHOLDER=First Gesture@*/LongPressGesture()/*@END_MENU_TOKEN@*/)
+        // This causes issues with scroll view scrolling.
+//            .simultaneousGesture(/*@START_MENU_TOKEN@*//*@PLACEHOLDER=First Gesture@*/LongPressGesture()/*@END_MENU_TOKEN@*/)
+            .dragGesture(
+                maskPrecedence: maskPrecedence,
+                gesture: DragGesture(
+                    /// LOL setting this to 20 works, I guess...welp.
+                    minimumDistance: 20,
+                    coordinateSpace: .global
+                ),
+                gestureMask: presentsWithGesture ? .subviews : .all)
+//            .gesture(
+//                DragGesture(
+//                    minimumDistance: 0,
+//                    coordinateSpace: .global)
+////                .simultaneously(with: <#T##Gesture#>)
+////                    .exclusively(before: <#T##Gesture#>)
+////                    .sequenced(before: <#T##Gesture#>)
+//                .onChanged { _ in
+//                    // no-op
+//                },
+//                including: presentsWithGesture ? .subviews : .all
+//            )
+            .defersSystemGestures(on: .leading)
+    }
+    
+    @ViewBuilder
+    private func dragGesture(
+        maskPrecedence: GesturePrecedence,
+        gesture: DragGesture,
+        gestureMask: GestureMask
+    ) -> some View {
+        switch maskPrecedence {
+        case .lower:
+            self.gesture(gesture, including: gestureMask)
+        case .simultaneous:
+            self.simultaneousGesture(gesture, including: gestureMask)
+        case .higher:
+            self.highPriorityGesture(gesture, including: gestureMask)
+        }
     }
 }
 
@@ -98,10 +138,6 @@ struct ExpandedPost: View {
                     commentTracker.comments = sortComments(commentTracker.comments, by: newSortingType)
                 }
             }
-        /// This on its own has some effect, but not enough.
-            .defersSystemGestures(on: .leading)
-        /// This, combined with defersSystemGesture (???), pretty much makes sidebar not show up with swipe gesture. It's not 100% effective, since the system appears to use a combination of gesture velocity/location to determine if it should show the sidebar.
-            .sidebarPresentsWithGesture(self.navigationPath.wrappedValue.isEmpty)
     }
     
     private var contentView: some View {
@@ -109,6 +145,9 @@ struct ExpandedPost: View {
             VStack(spacing: 0) {
                 postView
                     .id(post.hashValue)
+//                    .splitViewSidebar(
+//                        presentsWithGesture: false,
+//                        maskPrecedence: .simultaneous)
                 
                 Divider()
                     .background(.black)
@@ -117,6 +156,9 @@ struct ExpandedPost: View {
                     noCommentsView()
                 } else {
                     commentsView
+//                        .splitViewSidebar(
+//                            presentsWithGesture: false,
+//                            maskPrecedence: .lower)
                 }
             }
         }

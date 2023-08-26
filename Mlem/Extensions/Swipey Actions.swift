@@ -86,7 +86,7 @@ struct SwipeyView: ViewModifier {
                         /// On iPhone, swiping from edge always triggers the system navigation pop back gesture.
                         /// On iPad, swipey view's gesture seems to hug a little to close to the system sidebar/navigate back gestures, hence we add a check on startLocation.x.
                         if UIDevice.current.userInterfaceIdiom == .pad {
-                            guard value.startLocation.x >= 0 else {
+                            guard value.startLocation.x >= 1 else {
                                 print("ignoring swipey view gesture on leading screen edge")
                                 return
                             }

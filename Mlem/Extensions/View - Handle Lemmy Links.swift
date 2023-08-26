@@ -14,6 +14,7 @@ struct HandleLemmyLinksDisplay: ViewModifier {
     @EnvironmentObject var filtersTracker: FiltersTracker
     @EnvironmentObject var favoriteCommunitiesTracker: FavoriteCommunitiesTracker
     @EnvironmentObject var savedAccounts: SavedAccountTracker
+    @Environment(\.navigationPath) var navigationPath
     
     @AppStorage("internetSpeed") var internetSpeed: InternetSpeed = .fast
     @AppStorage("defaultPostSorting") var defaultPostSorting: PostSortType = .hot
@@ -65,6 +66,9 @@ struct HandleLemmyLinksDisplay: ViewModifier {
                 ExpandedPost(post: post.post)
                     .environmentObject(post.postTracker)
                     .environmentObject(appState)
+                    .splitViewSidebar(
+                        presentsWithGesture: navigationPath.wrappedValue.isEmpty,
+                        maskPrecedence: .simultaneous)
             }
             .navigationDestination(for: LazyLoadPostLinkWithContext.self) { post in
                 LazyLoadExpandedPost(post: post.post)
