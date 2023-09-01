@@ -9,13 +9,13 @@ import Foundation
 import Nuke
 import SwiftUI
 
-class PostTracker: FeedTracker<APIPostView> {
+class PostTracker: FeedTracker<APIPostView>, Identifiable {
     private let prefetcher = ImagePrefetcher(
         pipeline: ImagePipeline.shared,
         destination: .memoryCache,
         maxConcurrentRequestCount: 40
     )
-    
+
     /// A method to request the tracker loads the next page of posts
     /// - Parameters:
     ///   - account: The `SavedAccount` for the logged in user
@@ -30,7 +30,7 @@ class PostTracker: FeedTracker<APIPostView> {
         filtering: @escaping (_: APIPostView) -> Bool = { _ in true }
     ) async throws {
         let currentPage = page
-        
+
         // retry this until we get some items that pass the filter
         var responsePosts: [APIPostView] = .init()
         let numItems = items.count
@@ -46,7 +46,7 @@ class PostTracker: FeedTracker<APIPostView> {
                 ),
                 filtering: filtering
             )
-            
+
             responsePosts = response.posts
         } while !responsePosts.isEmpty && numItems > items.count + AppConstants.infiniteLoadThresholdOffset
 
@@ -61,7 +61,7 @@ class PostTracker: FeedTracker<APIPostView> {
         if currentPage == 1, responsePosts.isEmpty {
             try await attemptAuthenticatedCall(with: account)
         }
-        
+
         // don't preload filtered images
         preloadImages(responsePosts.filter(filtering))
     }
@@ -92,7 +92,7 @@ class PostTracker: FeedTracker<APIPostView> {
             preloadImages(response.posts)
         }
     }
-    
+
     // MARK: - Private methods
 
     private func preloadImages(_ newPosts: [APIPostView]) {
@@ -129,26 +129,26 @@ class PostTracker: FeedTracker<APIPostView> {
 
         prefetcher.startPrefetching(with: imageRequests)
     }
-    
+
     func removeUserPosts(from personId: Int) {
         filter {
             $0.creator.id != personId
         }
     }
-    
+
     func removeCommunityPosts(from communityId: Int) {
         filter {
             $0.community.id != communityId
         }
     }
-    
+
     private func attemptAuthenticatedCall(with account: SavedAccount) async throws {
         let request = GetPrivateMessagesRequest(
             account: account,
             page: 1,
             limit: 1
         )
-        
+
         do {
             try await apiClient.perform(request: request)
         } catch {

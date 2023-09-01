@@ -114,6 +114,22 @@ struct FeedPost: View {
                     secondaryTrailingAction: enableSwipeActions ? replySwipeAction : nil
                 )
         }
+        .fullScreenLabel {
+            VStack(alignment: .leading) {
+                Text(postView.post.name)
+                    .font(.headline)
+                interactionBar
+            }
+        }
+        .onFullScreenDoubleTap {
+            UpvoteView(
+                upvoteFuncion: upvotePost,
+                completedImage:
+                    postView.myVote == .upvote ?
+                        Image(systemName: "rectangle.and.arrow.up.right.and.arrow.down.left.slash") :
+                        Image(systemName: "arrow.up")
+            )
+        }
     }
 
     var userServerInstanceLocation: ServerInstanceLocation {
@@ -183,30 +199,35 @@ struct FeedPost: View {
                 .padding(.top, AppConstants.postAndCommentSpacing)
                 .padding(.horizontal, AppConstants.postAndCommentSpacing)
                 
-                InteractionBarView(
-                    apiView: postView,
-                    accessibilityContext: "post",
-                    widgets: layoutWidgetTracker.groups.post,
-                    displayedScore: displayedScore,
-                    displayedVote: displayedVote,
-                    displayedSaved: displayedSaved,
-                    upvote: upvotePost,
-                    downvote: downvotePost,
-                    save: savePost,
-                    reply: replyToPost,
-                    share: {
-                        if let url = URL(string: postView.post.apId) {
-                            showShareSheet(URLtoShare: url)
-                        }
-                    },
-                    shouldShowScore: shouldShowScoreInPostBar,
-                    showDownvotesSeparately: showPostDownvotesSeparately,
-                    shouldShowTime: shouldShowTimeInPostBar,
-                    shouldShowSaved: shouldShowSavedInPostBar,
-                    shouldShowReplies: shouldShowRepliesInPostBar
-                )
+                interactionBar
             }
         }
+    }
+    
+    @ViewBuilder
+    var interactionBar: some View {
+        InteractionBarView(
+            apiView: postView,
+            accessibilityContext: "post",
+            widgets: layoutWidgetTracker.groups.post,
+            displayedScore: displayedScore,
+            displayedVote: displayedVote,
+            displayedSaved: displayedSaved,
+            upvote: upvotePost,
+            downvote: downvotePost,
+            save: savePost,
+            reply: replyToPost,
+            share: {
+                if let url = URL(string: postView.post.apId) {
+                    showShareSheet(URLtoShare: url)
+                }
+            },
+            shouldShowScore: shouldShowScoreInPostBar,
+            showDownvotesSeparately: showPostDownvotesSeparately,
+            shouldShowTime: shouldShowTimeInPostBar,
+            shouldShowSaved: shouldShowSavedInPostBar,
+            shouldShowReplies: shouldShowRepliesInPostBar
+        )
     }
 
     func upvotePost() async {
