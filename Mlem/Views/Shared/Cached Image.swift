@@ -98,7 +98,7 @@ struct CachedImage: View, FullScreenActualContent {
             }
         }
         .cornerRadius(cornerRadius)
-        .frame(width: size.width, height: size.height)
+        .frame(idealWidth: size.width, maxHeight: size.height)
         .fixedSize()
         .clipped()
         .allowsHitTesting(false)
@@ -107,6 +107,33 @@ struct CachedImage: View, FullScreenActualContent {
             Rectangle()
                 .frame(maxHeight: size.height)
                 .opacity(0.00000000001)
+        }
+        .onTapGesture {
+            Task(priority: .userInitiated) {
+                do {
+                    let (data, _) = try await ImagePipeline.shared.data(for: url!)
+                    let fileType = url?.pathExtension ?? "png"
+                    let quicklook = FileManager.default.temporaryDirectory.appending(path: "quicklook.\(fileType)")
+                    if FileManager.default.fileExists(atPath: quicklook.absoluteString) {
+                        print("file exsists")
+                        try FileManager.default.removeItem(at: quicklook)
+                    }
+                    try data.write(to: quicklook)
+                    await MainActor.run {
+                        quickLookUrl = quicklook
+                    }
+                } catch {
+                    print(String(describing: error))
+                }
+            }
+        }
+        .onChange(of: quickLookUrl) { url in
+            if url == nil, let dismissCallback {
+                dismissCallback()
+            }
+        }
+        .fullScreenCover(item: $quickLookUrl) { url in
+            QuickLookView(urls: [url])
         }
     }
     static func imageNotFoundDefault(_ err: Error? = nil) -> AnyView {

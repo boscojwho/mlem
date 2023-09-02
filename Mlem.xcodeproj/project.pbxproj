@@ -410,6 +410,7 @@
 		CDF842682A49FB9000723DA0 /* Inbox View Logic.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF842672A49FB9000723DA0 /* Inbox View Logic.swift */; };
 		CDF8426B2A4A2AB600723DA0 /* Inbox Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF8426A2A4A2AB600723DA0 /* Inbox Item.swift */; };
 		CDF8426F2A4A385A00723DA0 /* Inbox Item Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF8426E2A4A385A00723DA0 /* Inbox Item Type.swift */; };
+		E44FCC7E2AA3262100AB46D6 /* MediaPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44FCC7D2AA3262100AB46D6 /* MediaPreviewViewController.swift */; };
 		E453A1D02A81C2140004BB8A /* QuickLookPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453A1CF2A81C2140004BB8A /* QuickLookPreviewController.swift */; };
 		E47B2B762A902DE200629AF7 /* SettingsRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E47B2B752A902DE200629AF7 /* SettingsRoutes.swift */; };
 		E4902BAB2A9024BF0054FB36 /* SettingsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4902BAA2A9024BF0054FB36 /* SettingsRouter.swift */; };
@@ -838,6 +839,7 @@
 		CDF842672A49FB9000723DA0 /* Inbox View Logic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Inbox View Logic.swift"; sourceTree = "<group>"; };
 		CDF8426A2A4A2AB600723DA0 /* Inbox Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Inbox Item.swift"; sourceTree = "<group>"; };
 		CDF8426E2A4A385A00723DA0 /* Inbox Item Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Inbox Item Type.swift"; sourceTree = "<group>"; };
+		E44FCC7D2AA3262100AB46D6 /* MediaPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MediaPreviewViewController.swift; path = Animations/MediaPreviewViewController.swift; sourceTree = "<group>"; };
 		E453A1CF2A81C2140004BB8A /* QuickLookPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLookPreviewController.swift; sourceTree = "<group>"; };
 		E47B2B752A902DE200629AF7 /* SettingsRoutes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRoutes.swift; sourceTree = "<group>"; };
 		E4902BAA2A9024BF0054FB36 /* SettingsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRouter.swift; sourceTree = "<group>"; };
@@ -1284,7 +1286,6 @@
 				63F0C7BA2A058CB700A18C5D /* URLSessionWebSocketTask - Send Ping.swift */,
 				B1A3BDE82A8FBA0000010428 /* View - ExpandableView.swift */,
 				B1B8510D2A9504EE003684A4 /* Environment - FullScreen Helper.swift */,
-				B12C610F2A961832001477DA /* View - Proper Share.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1403,6 +1404,7 @@
 				6386E02B2A03D1EC006B3C1D /* App State.swift */,
 				63DF71F02A02999C002AC14E /* App Constants.swift */,
 				B1B78D632A51D53900F72485 /* AppDelegate.swift */,
+				E44FCC7D2AA3262100AB46D6 /* MediaPreviewViewController.swift */,
 				6363D5C827EE196A00E34822 /* Assets.xcassets */,
 				6363D5CA27EE196A00E34822 /* Preview Content */,
 				6332FDBC27EFAF7B0009A98A /* Settings.bundle */,
@@ -2612,6 +2614,7 @@
 				CDCBD72B2A8EC0A800387A2C /* Instance Summary.swift in Sources */,
 				CDC1C9412A7ABA9C00072E3D /* ReadMarkStyle.swift in Sources */,
 				B1149F0D2AA21400009E3EB9 /* MediaCoordinator.swift in Sources */,
+				E44FCC7E2AA3262100AB46D6 /* MediaPreviewViewController.swift in Sources */,
 				6372186D2A3A2AAD008C4816 /* EditComment.swift in Sources */,
 				6D693A4A2A51B98F009E2D76 /* APICommentReportView.swift in Sources */,
 				637218622A3A2AAD008C4816 /* DeletePost.swift in Sources */,
@@ -2915,7 +2918,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "local build";
 				DEVELOPMENT_ASSET_PATHS = "\"Mlem/Preview Content\"";
-				DEVELOPMENT_TEAM = 76ULHQGAPN;
+				DEVELOPMENT_TEAM = 4G96725NK5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Mlem/Info.plist;
@@ -2934,7 +2937,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hanners.Mlem;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hanners.Mlem.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
@@ -2957,7 +2960,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "local build";
 				DEVELOPMENT_ASSET_PATHS = "\"Mlem/Preview Content\"";
-				DEVELOPMENT_TEAM = 76ULHQGAPN;
+				DEVELOPMENT_TEAM = 4G96725NK5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Mlem/Info.plist;
@@ -2976,7 +2979,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hanners.Mlem;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hanners.Mlem.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;

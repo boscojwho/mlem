@@ -33,7 +33,7 @@ final class QuickLookPreviewController: UIViewController, QLPreviewControllerDat
         super.viewWillAppear(animated)
         
         if qlPreviewController == nil {
-            let preview = QLPreviewController()
+            let preview = MediaPreviewViewController()
             preview.dataSource = self
             preview.delegate = self
             preview.currentPreviewItemIndex = 0

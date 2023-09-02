@@ -205,13 +205,11 @@ struct LargePost: View {
             let limitHeight = limitImageHeightInFeed && !isExpanded
             VStack(spacing: AppConstants.postAndCommentSpacing) {
                 if layoutMode != .minimize {
-                    ExpandableView(dismissCallback: markPostAsRead) {
-                        CachedImage(
-                            url: url,
-                            maxHeight: layoutMode.getMaxHeight(limitHeight),
-                            dismissCallback: markPostAsRead,
-                            cornerRadius: AppConstants.largeItemCornerRadius)
-                    }
+                    CachedImage(
+                        url: url,
+                        maxHeight: layoutMode.getMaxHeight(limitHeight),
+                        dismissCallback: markPostAsRead,
+                        cornerRadius: AppConstants.largeItemCornerRadius)
                     .frame(
                         maxWidth: .infinity,
                         maxHeight: layoutMode.getMaxHeight(limitHeight),
