@@ -36,6 +36,10 @@ struct ContentView: View {
     
     var accessibilityFont: Bool { UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory }
     
+    @State private var responseEditorPresentationContext: PresentationSheetContext = .init(
+        selectedDetent: .large,
+        interactiveDismissDisabled: false)
+    
     var body: some View {
         FancyTabBar(selection: $tabSelection, navigationSelection: $tabNavigation, dragUpGestureCallback: showAccountSwitcherDragCallback) {
             Group {
@@ -111,7 +115,17 @@ struct ContentView: View {
         }
         .sheet(item: $editorTracker.editResponse) { editing in
             NavigationStack {
-                ResponseEditorView(concreteEditorModel: editing)
+                ResponseEditorView(
+                    concreteEditorModel: editing,
+                    presentationSheetContext: $responseEditorPresentationContext
+                )
+            }
+            .presentationDetents([.small, .medium, .large], selection: $responseEditorPresentationContext.selectedDetent)
+            ._presentationBackgroundInteraction(enabledUpThrough: .medium)
+            .interactiveDismissDisabled(responseEditorPresentationContext.interactiveDismissDisabled)
+            .onDisappear {
+                /// Ensure sheet appears as `.large` on initial presentation.
+                responseEditorPresentationContext.selectedDetent = .large
             }
         }
         .sheet(item: $editorTracker.editPost) { editing in

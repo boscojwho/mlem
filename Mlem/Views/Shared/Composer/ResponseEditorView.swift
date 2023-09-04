@@ -18,12 +18,25 @@ struct ResponseEditorView: View {
     
     let editorModel: any ResponseEditorModel
     
-    init(concreteEditorModel: ConcreteEditorModel) {
+    /// - Parameter presentationSheetContext: Applicable when presented as sheet.
+    init(
+        concreteEditorModel: ConcreteEditorModel,
+        presentationSheetContext: Binding<PresentationSheetContext>? = nil
+    ) {
         self.editorModel = concreteEditorModel.editorModel // don't need the wrapper
         self._editorBody = State(initialValue: concreteEditorModel.editorModel.prefillContents ?? "")
+        self._presentationSheetContext = presentationSheetContext ?? .constant(
+            .init(
+                selectedDetent: .large,
+                interactiveDismissDisabled: false
+            )
+        )
     }
 
     @Environment(\.dismiss) var dismiss
+    
+    /// Set this value if editor view is presented in a sheet context.
+    @Binding var presentationSheetContext: PresentationSheetContext
 
     @State var editorBody: String
     @State var isSubmitting: Bool = false
@@ -100,6 +113,9 @@ struct ResponseEditorView: View {
         .navigationBarColor()
         .navigationTitle(editorModel.modalName)
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: editorBody) { newValue in
+            presentationSheetContext.interactiveDismissDisabled = newValue.isEmpty ? false : true
+        }
     }
     
     @MainActor
