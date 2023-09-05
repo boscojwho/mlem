@@ -55,6 +55,10 @@ struct ExpandedPost: View {
     @State private var commentSortingType: CommentSortType = .top
     @State private var postLayoutMode: LargePost.LayoutMode = .maximize
     
+    @Environment(\.tabNavigationSelectionHashValue) private var selectedNavigationTabHashValue
+    @Environment(\.customNavigationPath) private var navigationPath
+    @Environment(\.navigationGoBack) private var goBackFlag
+
     var body: some View {
         contentView
             .environmentObject(commentTracker)
@@ -70,6 +74,35 @@ struct ExpandedPost: View {
                     commentTracker.comments = sortComments(commentTracker.comments, by: newSortingType)
                 }
             }
+            .onChange(of: selectedNavigationTabHashValue) { newValue in
+                if newValue == TabSelection.feeds.hashValue {
+                    /// Go back in subviews, check if navigato
+                    print("re-selected \(TabSelection.feeds) tab")
+                    if navigationPath.wrappedValue.isEmpty {
+                      
+                    } else {
+                        if let top = navigationPath.last {
+                            let selfHash = MlemRoutes.apiPost(post.post)
+                            let selfHash2 = MlemRoutes.apiPostView(post)
+                            let selfHash3 = MlemRoutes.postLinkWithContext(.init(post: post, postTracker: postTracker))
+                            let wrappedValue = top.wrappedValue
+//                            let topId = wrappedValue.id
+                            let topHash = wrappedValue.hashValue
+                            print("topItem hash value: \(topHash)")
+//                            if topId == selfHash.id || topId == selfHash2.id || topId == selfHash3.id {
+                            if topHash == selfHash.hashValue || topHash == selfHash2.hashValue || topHash == selfHash3.hashValue {
+                                print("post -> is equal route")
+//                                let popped = navigationPath.wrappedValue.popLast()
+//                                print("post -> \(popped?.hashValue) == \(selfHash.hashValue)/\(selfHash2.hashValue)/\(selfHash3.hashValue)")
+                                goBackFlag.wrappedValue = 1
+                            } else {
+                                print("not expanded post")
+                            }
+                        }
+                    }
+                }
+            }
+
     }
     
     private var contentView: some View {

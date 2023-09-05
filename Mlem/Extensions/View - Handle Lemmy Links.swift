@@ -9,7 +9,11 @@ import Dependencies
 import Foundation
 import SwiftUI
 
-enum MlemRoutes: Hashable {
+/*
+ TODO:
+ */
+
+enum MlemRoutes: Hashable { // }, Identifiable {
     case apiCommunityView(APICommunityView)
     case apiCommunity(APICommunity)
     
@@ -24,6 +28,61 @@ enum MlemRoutes: Hashable {
     case postLinkWithContext(PostLinkWithContext)
     case lazyLoadPostLinkWithContext(LazyLoadPostLinkWithContext)
     case userModeratorLink(UserModeratorLink)
+    
+//    static func == (lhs: Self, rhs: Self) -> Bool {
+//        switch (lhs, rhs) {
+//        case (.apiCommunity(_), .apiCommunity(_)):
+//            return false
+//        case (.apiCommunityView(_), .apiCommunityView(_)):
+//            return false
+//        case (.communityLinkWithContext(_), .communityLinkWithContext(_)):
+//            return false
+//        case (.communitySidebarLinkWithContext(_), .communitySidebarLinkWithContext(_)):
+//            return false
+//        case (.apiPostView(_), .apiPostView(_)):
+//            return false
+//        case (.apiPerson(_), .apiPerson(_)):
+//            return false
+//        case (.postLinkWithContext(_), .postLinkWithContext(_)):
+//            return false
+//        case (.lazyLoadPostLinkWithContext(_), .lazyLoadPostLinkWithContext(_)):
+//            return false
+//        case (.userModeratorLink(_), .userModeratorLink(_)):
+//            return false
+//        default:
+//            return lhs.id == rhs.id
+//        }
+//    }
+//    
+//    func hash(into hasher: inout Hasher) {
+//        hasher.combine(self.id)
+//    }
+//    
+//    var id: Int {
+//        switch self {
+//        case .apiCommunity(let value):
+//            return value.id
+//        case .apiCommunityView(let value):
+//            return value.id
+//        case .communityLinkWithContext(let value):
+//            return value.id
+//        case .communitySidebarLinkWithContext(let value):
+//            // - TODO: warning
+//            return value.community.id
+//        case .apiPostView(let value):
+//            return value.post.id
+//        case .apiPost(let value):
+//            return value.id
+//        case .apiPerson(let value):
+//            return value.id
+//        case .postLinkWithContext(let value):
+//            return value.post.post.id
+//        case .lazyLoadPostLinkWithContext(let value):
+//            return value.id
+//        case .userModeratorLink(let value):
+//            return value.id
+//        }
+//    }
 }
 
 struct HandleLemmyLinksDisplay: ViewModifier {

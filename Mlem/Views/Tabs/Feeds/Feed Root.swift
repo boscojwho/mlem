@@ -19,6 +19,7 @@ struct FeedRoot: View {
 
     @State var navigationPath = NavigationPath()
     @State private var customNavigationPath: [MlemRoutes] = []
+    @State private var goBackFlag: Int = 0
 
     @State var rootDetails: CommunityLinkWithContext?
     
@@ -54,6 +55,7 @@ struct FeedRoot: View {
         )
         .environment(\.navigationPath, $navigationPath)
         .environment(\.customNavigationPath, $customNavigationPath)
+        .environment(\.navigationGoBack, $goBackFlag)
         .environmentObject(appState)
         .environmentObject(accountsTracker)
         .onAppear {
@@ -95,15 +97,34 @@ struct FeedRoot: View {
                 print("switched to Feed tab")
             }
         }
+        .onChange(of: goBackFlag, perform: { value in
+            print("navigate go back flag == \(value)")
+//            if value >= 1 {
+//                goBackFlag = 0
+//                if let path = customNavigationPath.popLast() {
+//                    print(String(describing: path).prefix(50))
+//                }
+//            }
+            if value >= 1 {
+                goBackFlag = 0
+            } else if value == 0 {
+                if let path = customNavigationPath.popLast() {
+                    print(String(describing: path).prefix(50))
+                    print("* * *")
+                }
+            } else {
+                print("undefined behaviour")
+            }
+        })
 //        .onChange(of: selectedNavigationTabHashValue) { newValue in
 //            if newValue == TabSelection.feeds.hashValue {
 //                print("re-selected \(TabSelection.feeds) tab")
 //            }
 //        }
-        .overlay(alignment: .center) {
+        .overlay(alignment: .trailing) {
             #if DEBUG
             GroupBox {
-                Text("NavigationPath.count: \(navigationPath.count)")
+                Text("NavigationPath.count: \(customNavigationPath.count)")
             }
             #endif
         }

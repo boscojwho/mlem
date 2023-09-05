@@ -23,7 +23,7 @@ struct APIPostView: Decodable, APIContentViewProtocol {
 }
 
 extension APIPostView: Identifiable {
-    var id: Int { self.hashValue }
+    var id: Int { post.id }
 }
 
 extension APIPostView: Equatable {

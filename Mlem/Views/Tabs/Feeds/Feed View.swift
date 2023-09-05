@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Dependencies
 
+// swiftlint:disable type_body_length
 struct FeedView: View {
         
     // MARK: Environment and settings
@@ -31,6 +32,7 @@ struct FeedView: View {
     @Environment(\.tabScrollViewProxy) private var scrollViewProxy
 //    @Environment(\.navigationPath) private var navigationPath
     @Environment(\.customNavigationPath) private var navigationPath
+    @Environment(\.navigationGoBack) private var goBackFlag
     
     // MARK: Parameters and init
     
@@ -152,8 +154,21 @@ struct FeedView: View {
                                 }
                             }
                         } else {
-                            let count = navigationPath.wrappedValue.popLast()
-                            print("navigate go back -> \(count)")
+                            if let community, let top = navigationPath.last {
+                                let selfHash = MlemRoutes.apiCommunity(community)
+                                let topHash = top.wrappedValue.hashValue
+
+                                //                                if top.wrappedValue.id == selfHash.id {
+                                
+                                if topHash == selfHash.hashValue {
+                                    print("feed -> is equal route")
+//                                    let popped = navigationPath.wrappedValue.popLast()
+//                                    print("feed view -> \(popped?.hashValue) == \(selfHash.hashValue)")
+                                    goBackFlag.wrappedValue = 1
+                                } else {
+                                    print("not feed view")
+                                }
+                            }
                         }
                     }
                 }
@@ -307,3 +322,4 @@ struct FeedView: View {
         }
     }
 }
+// swiftlint:enable type_body_length

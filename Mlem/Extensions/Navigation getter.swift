@@ -29,3 +29,14 @@ extension EnvironmentValues {
         set { self[CustomNavigationPath.self] = newValue }
     }
 }
+
+private struct NavigationGoBack: EnvironmentKey {
+    static let defaultValue: Binding<Int> = .constant(0)
+}
+
+extension EnvironmentValues {
+    var navigationGoBack: Binding<Int> {
+        get { self[NavigationGoBack.self] }
+        set { self[NavigationGoBack.self] = newValue }
+    }
+}

@@ -16,7 +16,7 @@ struct FancyTabBar<Selection: FancyTabBarSelection, Content: View>: View {
     @AppStorage("hasTranslucentInsets") var hasTranslucentInsets: Bool = true
     
     @Binding private var selection: Selection
-    @State private var navigationSelection: NavigationSelection = TabSelection._tabBarNavigation
+    @State private var navigationSelection: NavigationSelection = TabSelection.feeds
     @State private var __tempNavigationSelection: Int = -1
     @State private var __tempToggle: Bool = false
     
@@ -94,32 +94,35 @@ struct FancyTabBar<Selection: FancyTabBarSelection, Content: View>: View {
                         .contentShape(Rectangle())
                     // high priority to prevent conflict with long press/drag
                         .highPriorityGesture(
-                            /// If tab already selected, only have gesture for navigation?
-                            tapToNavigateMaxCount
-                                .onEnded {
-                                    print("uhhh, user hit max tap count, this is really not supposed to happen.")
-                                }
-                                .simultaneously(
-                                    with: tapOnceToNavigate
-                                        .onEnded {
-                                            print("tapped once")
-                                            /// If user tapped on tab that's already selected.
-                                            if key.hashValue == selection.hashValue {
-                                                navigationSelection = TabSelection._tabBarNavigation
-                                                
-                                                __tempNavigationSelection = key.index
-                                                __tempToggle.toggle()
-                                            }
-                                            
-                                            selection = key
-                                        }
-                                )
+                            gestures(key: key)
+                            // If tab already selected, only have gesture for navigation?
+//                            tapToNavigateMaxCount
+//                                .onEnded {
+//                                    print("uhhh, user hit max tap count, this is really not supposed to happen.")
+//                                }
+//                                .simultaneously(
+//                                    with: tapOnceToNavigate
+//                                        .onEnded {
+//                                            print("tapped once")
+//                                            /// If user tapped on tab that's already selected.
+//                                            if key.hashValue == selection.hashValue {
+//                                                navigationSelection = TabSelection._tabBarNavigation
+//                                                
+//                                                __tempNavigationSelection = key.index
+//                                                __tempToggle.toggle()
+//                                            }
+//                                            
+//                                            selection = key
+//                                        }
+//                                )
                         )
                 }
             }
             .onChange(of: self.__tempToggle) { _ in
                 print("set tab nav selection to -> \(TabSelection(index: __tempNavigationSelection)!.labelText ?? "_")")
-                self.navigationSelection = TabSelection(index: __tempNavigationSelection)!
+//                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
+                    self.navigationSelection = TabSelection(index: __tempNavigationSelection)!
+//                }
             }
             .gesture(
                 DragGesture()
@@ -134,5 +137,31 @@ struct FancyTabBar<Selection: FancyTabBarSelection, Content: View>: View {
             .background(.thinMaterial)
         }
         .accessibilityElement(children: .contain)
+    }
+    
+    private func gestures(key: Selection) -> some Gesture {
+        if let tab = key as? TabSelection, let selectedTab = selection as? TabSelection {
+            if tab == selectedTab {
+                return AnyGesture(tapOnceToNavigate
+                    .onEnded {
+                        print("tapped once")
+                        /// If user tapped on tab that's already selected.
+                        if key.hashValue == selection.hashValue {
+                            navigationSelection = TabSelection._tabBarNavigation
+                            
+                            __tempNavigationSelection = key.index
+                            __tempToggle.toggle()
+                        }
+                    })
+            } else {
+                return AnyGesture(tapOnceToNavigate
+                    .onEnded {
+                        print("tapped once")
+                        selection = key
+                    })
+            }
+        } else {
+            return AnyGesture(TapGesture(count: 0))
+        }
     }
 }
