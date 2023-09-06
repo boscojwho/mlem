@@ -13,7 +13,7 @@ import SwiftUI
  TODO:
  */
 
-enum MlemRoutes: Hashable { // }, Identifiable {
+enum MlemRoutes: Hashable, CustomStringConvertible { // }, Identifiable {
     case apiCommunityView(APICommunityView)
     case apiCommunity(APICommunity)
     
@@ -28,6 +28,31 @@ enum MlemRoutes: Hashable { // }, Identifiable {
     case postLinkWithContext(PostLinkWithContext)
     case lazyLoadPostLinkWithContext(LazyLoadPostLinkWithContext)
     case userModeratorLink(UserModeratorLink)
+    
+    var description: String {
+        switch self {
+        case .apiCommunityView(let aPICommunityView):
+            return "apiCommunityView [\(aPICommunityView.id)]"
+        case .apiCommunity(let aPICommunity):
+            return "apiCommunity [\(aPICommunity.id)]"
+        case .communityLinkWithContext(let communityLinkWithContext):
+            return "communityLinkWithContext [\(communityLinkWithContext.id)]"
+        case .communitySidebarLinkWithContext(let communitySidebarLinkWithContext):
+            return "communitySidebarLinkWithContext [\(communitySidebarLinkWithContext.id)]"
+        case .apiPostView(let aPIPostView):
+            return "apiPostView [\(aPIPostView.id)]"
+        case .apiPost(let aPIPost):
+            return "apiPost [\(aPIPost.id)]"
+        case .apiPerson(let aPIPerson):
+            return "apiPerson [\(aPIPerson.id)]"
+        case .postLinkWithContext(let postLinkWithContext):
+            return "postLinkWithContext [\(postLinkWithContext.id)]"
+        case .lazyLoadPostLinkWithContext(let lazyLoadPostLinkWithContext):
+            return "lazyLoadPostLinkWithContext [\(lazyLoadPostLinkWithContext.id)]"
+        case .userModeratorLink(let userModeratorLink):
+            return "userModeratorLink [\(userModeratorLink.id)]"
+        }
+    }
     
 //    static func == (lhs: Self, rhs: Self) -> Bool {
 //        switch (lhs, rhs) {

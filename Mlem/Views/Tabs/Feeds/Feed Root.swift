@@ -23,6 +23,10 @@ struct FeedRoot: View {
 
     @State var rootDetails: CommunityLinkWithContext?
     
+    #if DEBUG
+    @State private var isPresentingNavigationDebugSheet: Bool = false
+    #endif
+    
     let showLoading: Bool
     
     var body: some View {
@@ -121,13 +125,23 @@ struct FeedRoot: View {
 //                print("re-selected \(TabSelection.feeds) tab")
 //            }
 //        }
+#if DEBUG
         .overlay(alignment: .trailing) {
-            #if DEBUG
             GroupBox {
                 Text("NavigationPath.count: \(customNavigationPath.count)")
             }
-            #endif
+            .onTapGesture {
+                isPresentingNavigationDebugSheet = true
+            }
         }
+        .sheet(isPresented: $isPresentingNavigationDebugSheet) {
+            List {
+                ForEach(customNavigationPath, id: \.self.hashValue) { route in
+                    Text(route.description + " \(route.hashValue)")
+                }
+            }
+        }
+#endif
     }
 }
 
