@@ -73,8 +73,10 @@ struct ExpandedPost: View {
                 }
             }
             .onAppear {
-                print("ExpandedPost [\(post.post.name.prefix(30))] appeared")
+                let debug = "ExpandedPost [\(post.post.name.prefix(30))] appeared"
+                print(debug)
                 dismissAction.dismiss = dismiss
+                dismissAction.context = debug
             }
     }
     

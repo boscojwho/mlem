@@ -33,7 +33,7 @@ struct FeedView: View {
     @Environment(\.navigationPath) private var navigationPath
     @EnvironmentObject private var dismissAction: NavigateDismissAction
     @Environment(\.dismiss) private var dismiss
-
+    
     // MARK: Parameters and init
     
     let community: APICommunity?
@@ -123,8 +123,10 @@ struct FeedView: View {
                 }
             }
             .onAppear {
-                print("FeedVew [\(community?.name.prefix(30) ?? "N/A")] appeared")
+                let debug = "FeedVew [\(community?.name.prefix(30) ?? "N/A")] appeared"
+                print(debug)
                 dismissAction.dismiss = dismiss
+                dismissAction.context = debug
             }
             .refreshable { await refreshFeed() }
     }
@@ -207,7 +209,7 @@ struct FeedView: View {
     @ViewBuilder
     private func feedPost(for postView: APIPostView) -> some View {
         VStack(spacing: 0) {
-            NavigationLink(value: PostLinkWithContext(post: postView, postTracker: postTracker)) {
+            NavigationLink(value: MlemRoutes.postLinkWithContext(PostLinkWithContext(post: postView, postTracker: postTracker))) {
                 FeedPost(
                     postView: postView,
                     showPostCreator: shouldShowPostCreator,

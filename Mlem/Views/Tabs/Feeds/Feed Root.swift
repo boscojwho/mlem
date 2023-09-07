@@ -9,6 +9,7 @@ import SwiftUI
 
 final class NavigateDismissAction: ObservableObject {
     var dismiss: DismissAction?
+    var context: String?
 }
 
 struct FeedRoot: View {
@@ -22,8 +23,13 @@ struct FeedRoot: View {
     @AppStorage("defaultPostSorting") var defaultPostSorting: PostSortType = .hot
 
     @StateObject private var dismissAction: NavigateDismissAction = .init()
+    @State private var customNavigationPath: [MlemRoutes] = []
     @State var navigationPath = NavigationPath()
     @State var rootDetails: CommunityLinkWithContext?
+
+#if DEBUG
+    @State private var isPresentingNavigationDebugSheet: Bool = false
+#endif
     
     let showLoading: Bool
     
@@ -34,7 +40,7 @@ struct FeedRoot: View {
         } detail: {
             if let rootDetails {
                 ScrollViewReader { proxy in
-                    NavigationStack(path: $navigationPath) {
+                    NavigationStack(path: $customNavigationPath) {
                         FeedView(
                             community: rootDetails.community,
                             feedType: rootDetails.feedType,
@@ -56,6 +62,7 @@ struct FeedRoot: View {
             navigationPath: $navigationPath
         )
         .environment(\.navigationPath, $navigationPath)
+        .environment(\.customNavigationPath, $customNavigationPath)
         .environmentObject(dismissAction)
         .environmentObject(appState)
         .environmentObject(accountsTracker)
@@ -93,16 +100,31 @@ struct FeedRoot: View {
                 }
             }
         }
-        .onChange(of: selectedTagHashValue) { newValue in
-            if newValue == TabSelection.feeds.hashValue {
-                print("switched to Feed tab")
+//        .onChange(of: selectedTagHashValue) { newValue in
+//            if newValue == TabSelection.feeds.hashValue {
+//                print("switched to Feed tab")
+//            }
+//        }
+//        .onChange(of: selectedNavigationTabHashValue) { newValue in
+//            if newValue == TabSelection.feeds.hashValue {
+//                print("re-selected \(TabSelection.feeds) tab")
+//            }
+//        }
+ #if DEBUG
+        .overlay(alignment: .trailing) {
+            GroupBox {
+                Text("NavigationPath.count: \(customNavigationPath.count)")
+            }
+            .onTapGesture {
+                isPresentingNavigationDebugSheet = true
             }
         }
-        .onChange(of: selectedNavigationTabHashValue) { newValue in
-            if newValue == TabSelection.feeds.hashValue {
-                print("re-selected \(TabSelection.feeds) tab")
+        .sheet(isPresented: $isPresentingNavigationDebugSheet) {
+            List {
+                Text(dismissAction.context ?? "No debug context")
             }
         }
+ #endif
     }
 }
 

@@ -12,7 +12,8 @@ import SwiftUI
 struct TabBarNavigation: ViewModifier {
     
     @Environment(\.tabNavigationSelectionHashValue) private var selectedNavigationTabHashValue
-    @Environment(\.navigationPath) private var navigationPath
+//    @Environment(\.navigationPath) private var navigationPath
+    @Environment(\.customNavigationPath) private var customNavigationPath
     @Environment(\.dismiss) private var dismissAction
     
     @Environment(\.tabScrollViewProxy) private var scrollViewProxy
@@ -28,7 +29,7 @@ struct TabBarNavigation: ViewModifier {
             .onChange(of: selectedNavigationTabHashValue) { newValue in
                 if newValue == tab.hashValue {
                     print("re-selected \(tab) tab")
-                    if navigationPath.wrappedValue.isEmpty {
+                    if customNavigationPath.wrappedValue.isEmpty {
                         if scrollToTopAppeared {
                             /// Already scrolled to top: Pop to sidebar.
                             print("pop to sidebar")
@@ -74,6 +75,23 @@ extension View {
     }
 }
 
+enum MlemRoutes: Hashable {
+    case apiCommunityView(APICommunityView)
+    case apiCommunity(APICommunity)
+    
+    case communityLinkWithContext(CommunityLinkWithContext)
+    case communitySidebarLinkWithContext(CommunitySidebarLinkWithContext)
+    
+    case apiPostView(APIPostView)
+    case apiPost(APIPost)
+    
+    case apiPerson(APIPerson)
+    
+    case postLinkWithContext(PostLinkWithContext)
+    case lazyLoadPostLinkWithContext(LazyLoadPostLinkWithContext)
+    case userModeratorLink(UserModeratorLink)
+}
+
 struct HandleLemmyLinksDisplay: ViewModifier {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var filtersTracker: FiltersTracker
@@ -86,6 +104,59 @@ struct HandleLemmyLinksDisplay: ViewModifier {
     // swiftlint:disable function_body_length
     func body(content: Content) -> some View {
         content
+            .navigationDestination(for: MlemRoutes.self) { route in
+                switch route {
+                case .apiCommunity(let community):
+                    FeedView(community: community, feedType: .all, sortType: defaultPostSorting)
+                        .environmentObject(appState)
+                        .environmentObject(filtersTracker)
+                        .environmentObject(CommunitySearchResultsTracker())
+                        .environmentObject(favoriteCommunitiesTracker)
+                case .apiCommunityView(let context):
+                    FeedView(community: context.community, feedType: .all, sortType: defaultPostSorting)
+                        .environmentObject(appState)
+                        .environmentObject(filtersTracker)
+                        .environmentObject(CommunitySearchResultsTracker())
+                        .environmentObject(favoriteCommunitiesTracker)
+                case .communityLinkWithContext(let context):
+                    FeedView(community: context.community, feedType: context.feedType, sortType: defaultPostSorting)
+                        .environmentObject(appState)
+                        .environmentObject(filtersTracker)
+                        .environmentObject(CommunitySearchResultsTracker())
+                        .environmentObject(favoriteCommunitiesTracker)
+                case .communitySidebarLinkWithContext(let context):
+                    CommunitySidebarView(
+                        community: context.community,
+                        communityDetails: context.communityDetails)
+                    .environmentObject(appState)
+                    .environmentObject(filtersTracker)
+                    .environmentObject(CommunitySearchResultsTracker())
+                    .environmentObject(favoriteCommunitiesTracker)
+                case .apiPostView(let post):
+                    ExpandedPost(post: post)
+                        .environmentObject(
+                            PostTracker(shouldPerformMergeSorting: false, internetSpeed: internetSpeed, initialItems: [post])
+                        )
+                        .environmentObject(appState)
+                case .apiPost(let post):
+                    LazyLoadExpandedPost(post: post)
+                        .environmentObject(appState)
+                case .apiPerson(let user):
+                    UserView(userID: user.id)
+                        .environmentObject(appState)
+                case .postLinkWithContext(let post):
+                    ExpandedPost(post: post.post)
+                        .environmentObject(post.postTracker)
+                        .environmentObject(appState)
+                case .lazyLoadPostLinkWithContext(let post):
+                    LazyLoadExpandedPost(post: post.post)
+                        .environmentObject(post.postTracker)
+                        .environmentObject(appState)
+                case .userModeratorLink(let user):
+                    UserModeratorView(userDetails: user.user, moderatedCommunities: user.moderatedCommunities)
+                        .environmentObject(appState)
+                }
+            }
             .navigationDestination(for: APICommunityView.self) { context in
                 FeedView(community: context.community, feedType: .all, sortType: defaultPostSorting)
                     .environmentObject(appState)
