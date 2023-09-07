@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+final class NavigateDismissAction: ObservableObject {
+    var dismiss: DismissAction?
+}
+
 struct FeedRoot: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var accountsTracker: SavedAccountTracker
@@ -17,8 +21,8 @@ struct FeedRoot: View {
     @AppStorage("defaultFeed") var defaultFeed: FeedType = .subscribed
     @AppStorage("defaultPostSorting") var defaultPostSorting: PostSortType = .hot
 
+    @StateObject private var dismissAction: NavigateDismissAction = .init()
     @State var navigationPath = NavigationPath()
-
     @State var rootDetails: CommunityLinkWithContext?
     
     let showLoading: Bool
@@ -52,6 +56,7 @@ struct FeedRoot: View {
             navigationPath: $navigationPath
         )
         .environment(\.navigationPath, $navigationPath)
+        .environmentObject(dismissAction)
         .environmentObject(appState)
         .environmentObject(accountsTracker)
         .onAppear {

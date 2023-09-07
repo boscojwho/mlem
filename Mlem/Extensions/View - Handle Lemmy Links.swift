@@ -9,6 +9,71 @@ import Dependencies
 import Foundation
 import SwiftUI
 
+struct TabBarNavigation: ViewModifier {
+    
+    @Environment(\.tabNavigationSelectionHashValue) private var selectedNavigationTabHashValue
+    @Environment(\.navigationPath) private var navigationPath
+    @Environment(\.dismiss) private var dismissAction
+    
+    @Environment(\.tabScrollViewProxy) private var scrollViewProxy
+    @Binding var scrollToTopAppeared: Bool
+    
+    let tab: TabSelection
+    let popToSidebar: () -> Void
+    let scrollToTop: () -> Void
+    let goBack: () -> Void
+    
+    func body(content: Content) -> some View {
+        content
+            .onChange(of: selectedNavigationTabHashValue) { newValue in
+                if newValue == tab.hashValue {
+                    print("re-selected \(tab) tab")
+                    if navigationPath.wrappedValue.isEmpty {
+                        if scrollToTopAppeared {
+                            /// Already scrolled to top: Pop to sidebar.
+                            print("pop to sidebar")
+                            popToSidebar()
+//                            withAnimation {
+//                                rootDetails = nil
+//                            }
+                        } else {
+                            print("scroll to top")
+                            scrollToTop()
+//                            withAnimation {
+//                                scrollViewProxy?.scrollTo(scrollToTop, anchor: .top)
+//                            }
+                        }
+                    } else {
+                        print("navigate go back")
+                        goBack()
+//                        navigationPath.wrappedValue.goBack()
+                    }
+                }
+            }
+    }
+}
+
+extension View {
+    
+    func tabBarNavigationEnabled(
+        _ tab: TabSelection,
+        scrollToTopAppeared: Binding<Bool>,
+        popToSidebar: @escaping () -> Void,
+        scrollToTop: @escaping () -> Void,
+        goBack: @escaping () -> Void
+    ) -> some View {
+        modifier(
+            TabBarNavigation(
+                scrollToTopAppeared: scrollToTopAppeared,
+                tab: tab, 
+                popToSidebar: popToSidebar,
+                scrollToTop: scrollToTop,
+                goBack: goBack
+            )
+        )
+    }
+}
+
 struct HandleLemmyLinksDisplay: ViewModifier {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var filtersTracker: FiltersTracker

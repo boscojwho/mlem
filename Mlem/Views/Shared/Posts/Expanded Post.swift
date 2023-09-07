@@ -35,7 +35,9 @@ struct ExpandedPost: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var editorTracker: EditorTracker
     @EnvironmentObject var layoutWidgetTracker: LayoutWidgetTracker
-
+    @EnvironmentObject private var dismissAction: NavigateDismissAction
+    @Environment(\.dismiss) private var dismiss
+    
     @StateObject var commentTracker: CommentTracker = .init()
     @EnvironmentObject var postTracker: PostTracker
     @State var post: APIPostView
@@ -69,6 +71,10 @@ struct ExpandedPost: View {
                 withAnimation(.easeIn(duration: 0.4)) {
                     commentTracker.comments = sortComments(commentTracker.comments, by: newSortingType)
                 }
+            }
+            .onAppear {
+                print("ExpandedPost [\(post.post.name.prefix(30))] appeared")
+                dismissAction.dismiss = dismiss
             }
     }
     

@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Dependencies
 
+// swiftlint:disable type_body_length
 struct FeedView: View {
         
     // MARK: Environment and settings
@@ -30,7 +31,9 @@ struct FeedView: View {
     @Environment(\.tabNavigationSelectionHashValue) private var selectedNavigationTabHashValue
     @Environment(\.tabScrollViewProxy) private var scrollViewProxy
     @Environment(\.navigationPath) private var navigationPath
-    
+    @EnvironmentObject private var dismissAction: NavigateDismissAction
+    @Environment(\.dismiss) private var dismiss
+
     // MARK: Parameters and init
     
     let community: APICommunity?
@@ -119,6 +122,10 @@ struct FeedView: View {
                     shouldLoad = false
                 }
             }
+            .onAppear {
+                print("FeedVew [\(community?.name.prefix(30) ?? "N/A")] appeared")
+                dismissAction.dismiss = dismiss
+            }
             .refreshable { await refreshFeed() }
     }
     
@@ -137,25 +144,43 @@ struct FeedView: View {
                     
                     EndOfFeedView(isLoading: isLoading)
                 }
-                .onChange(of: selectedNavigationTabHashValue) { newValue in
-                    if newValue == TabSelection.feeds.hashValue {
-                        print("re-selected \(TabSelection.feeds) tab")
-                        if navigationPath.wrappedValue.isEmpty {
-                            if scrollToTopAppeared {
-                                /// Already scrolled to top: Pop to sidebar.
-                                withAnimation {
-                                    rootDetails = nil
-                                }
-                            } else {
-                                withAnimation {
-                                    scrollViewProxy?.scrollTo(scrollToTop, anchor: .top)
-                                }
-                            }
-                        } else {
-                            navigationPath.wrappedValue.goBack()
+                .tabBarNavigationEnabled(
+                    .feeds,
+                    scrollToTopAppeared: $scrollToTopAppeared,
+                    popToSidebar: {
+                        /// Already scrolled to top: Pop to sidebar.
+                        withAnimation {
+                            rootDetails = nil
                         }
+                    },
+                    scrollToTop: {
+                        withAnimation {
+                            scrollViewProxy?.scrollTo(scrollToTop, anchor: .top)
+                        }
+                    },
+                    goBack: {
+                        dismissAction.dismiss?()
                     }
-                }
+                )
+//                .onChange(of: selectedNavigationTabHashValue) { newValue in
+//                    if newValue == TabSelection.feeds.hashValue {
+//                        print("re-selected \(TabSelection.feeds) tab")
+//                        if navigationPath.wrappedValue.isEmpty {
+//                            if scrollToTopAppeared {
+//                                /// Already scrolled to top: Pop to sidebar.
+//                                withAnimation {
+//                                    rootDetails = nil
+//                                }
+//                            } else {
+//                                withAnimation {
+//                                    scrollViewProxy?.scrollTo(scrollToTop, anchor: .top)
+//                                }
+//                            }
+//                        } else {
+//                            navigationPath.wrappedValue.goBack()
+//                        }
+//                    }
+//                }
             }
         }
         .fancyTabScrollCompatible()
@@ -306,3 +331,4 @@ struct FeedView: View {
         }
     }
 }
+// swiftlint:enable type_body_length
