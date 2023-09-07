@@ -79,7 +79,8 @@ struct InboxView: View {
     
     // utility
     @State private var navigationPath = NavigationPath()
-    
+    @StateObject private var dismissAction: NavigateDismissAction = .init()
+
     private var scrollToTopId: Int? {
         switch curTab {
         case .all:
@@ -125,6 +126,7 @@ struct InboxView: View {
                     }
             }
         }
+        .environmentObject(dismissAction)
     }
     
     @ViewBuilder var contentView: some View {

@@ -29,7 +29,8 @@ struct SearchView: View {
     @State private var hasMorePages: Bool = true
     
     @State private var navigationPath = NavigationPath()
-    
+    @StateObject private var dismissAction: NavigateDismissAction = .init()
+
     @Namespace var scrollToTop
     private var scrollToId: (any Hashable)? {
         if showRecentSearches {
@@ -64,6 +65,7 @@ struct SearchView: View {
                     }
             }
         }
+        .environmentObject(dismissAction)
         .handleLemmyLinkResolution(navigationPath: $navigationPath)
         .searchable(text: getSearchTextBinding(), prompt: "Search for communities")
         .autocorrectionDisabled(true)

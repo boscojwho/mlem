@@ -22,6 +22,8 @@ struct UserView: View {
     @Environment(\.navigationPath) private var navigationPath
     @Environment(\.tabScrollViewProxy) private var scrollViewProxy
     @Environment(\.tabNavigationSelectionHashValue) private var selectedNavigationTabHashValue
+    @EnvironmentObject private var dismissAction: NavigateDismissAction
+    @Environment(\.dismiss) private var dismiss
 
     // parameters
     @State var userID: Int
@@ -62,6 +64,9 @@ struct UserView: View {
             .sheet(isPresented: $isPresentingAccountSwitcher) {
                 AccountsPage(onboarding: false)
             }
+            .onAppear {
+                dismissAction.dismiss = dismiss
+            }
             .onChange(of: selectedNavigationTabHashValue) { newValue in
                 if newValue == TabSelection.profile.hashValue {
                     print("re-selected \(TabSelection.profile) tab")
@@ -88,7 +93,7 @@ struct UserView: View {
     @ViewBuilder
     private var moderatorButton: some View {
         if let user = userDetails, !moderatedCommunities.isEmpty {
-            NavigationLink(value: UserModeratorLink(user: user, moderatedCommunities: moderatedCommunities)) {
+            NavigationLink(value: MlemRoutes.userModeratorLink(.init(user: user, moderatedCommunities: moderatedCommunities))) {
                 Image(systemName: "shield")
             }
         }
@@ -400,7 +405,7 @@ struct UserView: View {
      User post
      */
     private func postEntry(for post: APIPostView) -> some View {
-        NavigationLink(value: PostLinkWithContext(post: post, postTracker: privatePostTracker)) {
+        NavigationLink(value: MlemRoutes.postLinkWithContext(.init(post: post, postTracker: privatePostTracker))) {
             VStack(spacing: 0) {
                 FeedPost(postView: post,
                          showPostCreator: false,

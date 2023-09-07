@@ -231,11 +231,10 @@ struct FeedView: View {
         Menu {
             if let community, let communityDetails {
                 // until we find a nice way to put nav stuff in MenuFunction, this'll have to do :(
-                NavigationLink(value:
-                                CommunitySidebarLinkWithContext(
-                                    community: community,
-                                    communityDetails: communityDetails
-                                )) {
+                NavigationLink(value: MlemRoutes.communitySidebarLinkWithContext(.init(
+                    community: community,
+                    communityDetails: communityDetails
+                ))) {
                                     Label("Sidebar", systemImage: "sidebar.right")
                                 }
                 
@@ -287,11 +286,10 @@ struct FeedView: View {
     @ViewBuilder
     private var toolbarHeader: some View {
         if let community = community {
-            NavigationLink(value:
-                            CommunitySidebarLinkWithContext(
-                                community: community,
-                                communityDetails: communityDetails
-                            )) {
+            NavigationLink(value: MlemRoutes.communitySidebarLinkWithContext(.init(
+                community: community,
+                communityDetails: communityDetails
+            ))) {
                                 Text(community.name)
                                     .font(.headline)
                                     .foregroundColor(.primary)

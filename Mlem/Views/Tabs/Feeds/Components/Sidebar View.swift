@@ -93,8 +93,7 @@ struct CommunitySidebarView: View {
                 VStack {
                     Divider()
                     ForEach(communityDetails.moderators) { moderatorView in
-
-                        NavigationLink(value: moderatorView.moderator) {
+                        NavigationLink(value: MlemRoutes.apiPerson(moderatorView.moderator)) {
                             HStack {
                                 UserProfileLabel(
                                     user: moderatorView.moderator,

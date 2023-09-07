@@ -42,7 +42,10 @@ struct CommuntiyFeedRowView: View {
     @EnvironmentObject var favoritesTracker: FavoriteCommunitiesTracker
 
     var body: some View {
+        // Let SwiftUI system implicitly add to navigation path. [2023.09]
         NavigationLink(value: CommunityLinkWithContext(community: community, feedType: .subscribed)) {
+            // This doesn't work.
+//        NavigationLink(value: MlemRoutes.communityLinkWithContext(.init(community: community, feedType: .subscribed))) {
             HStack {
                 // NavigationLink with invisible array
                 communityNameLabel
@@ -165,7 +168,10 @@ struct HomepageFeedRowView: View {
     let description: String
 
     var body: some View {
+        // Let SwiftUI system implicitly add to navigation path. [2023.09]
         NavigationLink(value: CommunityLinkWithContext(community: nil, feedType: feedType)) {
+            // This doesn't work.
+//        NavigationLink(value: MlemRoutes.communityLinkWithContext(.init(community: nil, feedType: feedType))) {
             HStack {
                 Image(systemName: iconName).resizable()
                     .frame(width: 36, height: 36).foregroundColor(iconColor)

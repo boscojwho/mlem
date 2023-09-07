@@ -31,7 +31,7 @@ struct UserProfileLink: View {
     }
 
     var body: some View {
-        NavigationLink(value: user) {
+        NavigationLink(value: MlemRoutes.apiPerson(user)) {
             UserProfileLabel(
                 user: user,
                 serverInstanceLocation: serverInstanceLocation,

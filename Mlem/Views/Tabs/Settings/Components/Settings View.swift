@@ -13,6 +13,7 @@ struct SettingsView: View {
     @EnvironmentObject var layoutWidgetTracker: LayoutWidgetTracker
 
     @State var navigationPath = NavigationPath()
+    @StateObject private var dismissAction: NavigateDismissAction = .init()
 
     @Environment(\.openURL) private var openURL
     @Environment(\.tabSelectionHashValue) private var selectedTagHashValue
@@ -83,6 +84,7 @@ struct SettingsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .useSettingsNavigationRouter()
         }
+        .environmentObject(dismissAction)
         .handleLemmyLinkResolution(navigationPath: $navigationPath)
         .onChange(of: selectedTagHashValue) { newValue in
             if newValue == TabSelection.settings.hashValue {

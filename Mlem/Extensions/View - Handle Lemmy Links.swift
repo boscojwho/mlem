@@ -157,65 +157,65 @@ struct HandleLemmyLinksDisplay: ViewModifier {
                         .environmentObject(appState)
                 }
             }
-            .navigationDestination(for: APICommunityView.self) { context in
-                FeedView(community: context.community, feedType: .all, sortType: defaultPostSorting)
-                    .environmentObject(appState)
-                    .environmentObject(filtersTracker)
-                    .environmentObject(CommunitySearchResultsTracker())
-                    .environmentObject(favoriteCommunitiesTracker)
-            }
-            .navigationDestination(for: APICommunity.self) { community in
-                FeedView(community: community, feedType: .all, sortType: defaultPostSorting)
-                    .environmentObject(appState)
-                    .environmentObject(filtersTracker)
-                    .environmentObject(CommunitySearchResultsTracker())
-                    .environmentObject(favoriteCommunitiesTracker)
-            }
-            .navigationDestination(for: CommunityLinkWithContext.self) { context in
-                FeedView(community: context.community, feedType: context.feedType, sortType: defaultPostSorting)
-                    .environmentObject(appState)
-                    .environmentObject(filtersTracker)
-                    .environmentObject(CommunitySearchResultsTracker())
-                    .environmentObject(favoriteCommunitiesTracker)
-            }
-            .navigationDestination(for: CommunitySidebarLinkWithContext.self) { context in
-                CommunitySidebarView(
-                    community: context.community,
-                    communityDetails: context.communityDetails)
-                .environmentObject(appState)
-                .environmentObject(filtersTracker)
-                .environmentObject(CommunitySearchResultsTracker())
-                .environmentObject(favoriteCommunitiesTracker)
-            }
-            .navigationDestination(for: APIPostView.self) { post in
-                ExpandedPost(post: post)
-                .environmentObject(
-                    PostTracker(shouldPerformMergeSorting: false, internetSpeed: internetSpeed, initialItems: [post])
-                )
-                .environmentObject(appState)
-            }
-            .navigationDestination(for: APIPost.self) { post in
-                LazyLoadExpandedPost(post: post)
-                    .environmentObject(appState)
-            }
-            .navigationDestination(for: PostLinkWithContext.self) { post in
-                ExpandedPost(post: post.post)
-                    .environmentObject(post.postTracker)
-                    .environmentObject(appState)
-            }
-            .navigationDestination(for: LazyLoadPostLinkWithContext.self) { post in
-                LazyLoadExpandedPost(post: post.post)
-                    .environmentObject(post.postTracker)
-                    .environmentObject(appState)
-            }
-            .navigationDestination(for: APIPerson.self) { user in
-                UserView(userID: user.id)
-                    .environmentObject(appState)
-            }
-            .navigationDestination(for: UserModeratorLink.self) { user in
-                UserModeratorView(userDetails: user.user, moderatedCommunities: user.moderatedCommunities)
-                    .environmentObject(appState)
-            }
+//            .navigationDestination(for: APICommunityView.self) { context in
+//                FeedView(community: context.community, feedType: .all, sortType: defaultPostSorting)
+//                    .environmentObject(appState)
+//                    .environmentObject(filtersTracker)
+//                    .environmentObject(CommunitySearchResultsTracker())
+//                    .environmentObject(favoriteCommunitiesTracker)
+//            }
+//            .navigationDestination(for: APICommunity.self) { community in
+//                FeedView(community: community, feedType: .all, sortType: defaultPostSorting)
+//                    .environmentObject(appState)
+//                    .environmentObject(filtersTracker)
+//                    .environmentObject(CommunitySearchResultsTracker())
+//                    .environmentObject(favoriteCommunitiesTracker)
+//            }
+//            .navigationDestination(for: CommunityLinkWithContext.self) { context in
+//                FeedView(community: context.community, feedType: context.feedType, sortType: defaultPostSorting)
+//                    .environmentObject(appState)
+//                    .environmentObject(filtersTracker)
+//                    .environmentObject(CommunitySearchResultsTracker())
+//                    .environmentObject(favoriteCommunitiesTracker)
+//            }
+//            .navigationDestination(for: CommunitySidebarLinkWithContext.self) { context in
+//                CommunitySidebarView(
+//                    community: context.community,
+//                    communityDetails: context.communityDetails)
+//                .environmentObject(appState)
+//                .environmentObject(filtersTracker)
+//                .environmentObject(CommunitySearchResultsTracker())
+//                .environmentObject(favoriteCommunitiesTracker)
+//            }
+//            .navigationDestination(for: APIPostView.self) { post in
+//                ExpandedPost(post: post)
+//                .environmentObject(
+//                    PostTracker(shouldPerformMergeSorting: false, internetSpeed: internetSpeed, initialItems: [post])
+//                )
+//                .environmentObject(appState)
+//            }
+//            .navigationDestination(for: APIPost.self) { post in
+//                LazyLoadExpandedPost(post: post)
+//                    .environmentObject(appState)
+//            }
+//            .navigationDestination(for: PostLinkWithContext.self) { post in
+//                ExpandedPost(post: post.post)
+//                    .environmentObject(post.postTracker)
+//                    .environmentObject(appState)
+//            }
+//            .navigationDestination(for: LazyLoadPostLinkWithContext.self) { post in
+//                LazyLoadExpandedPost(post: post.post)
+//                    .environmentObject(post.postTracker)
+//                    .environmentObject(appState)
+//            }
+//            .navigationDestination(for: APIPerson.self) { user in
+//                UserView(userID: user.id)
+//                    .environmentObject(appState)
+//            }
+//            .navigationDestination(for: UserModeratorLink.self) { user in
+//                UserModeratorView(userDetails: user.user, moderatedCommunities: user.moderatedCommunities)
+//                    .environmentObject(appState)
+//            }
     }
     // swiftlint:enable function_body_length
 }

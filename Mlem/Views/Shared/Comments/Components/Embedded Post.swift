@@ -21,7 +21,7 @@ struct EmbeddedPost: View {
     // - enrich info
     // - navigation link to post
     var body: some View {
-        NavigationLink(value: LazyLoadPostLinkWithContext(post: post, postTracker: postTracker)) {
+        NavigationLink(value: MlemRoutes.lazyLoadPostLinkWithContext(.init(post: post, postTracker: postTracker))) {
             postLinkButton()
         }
     }

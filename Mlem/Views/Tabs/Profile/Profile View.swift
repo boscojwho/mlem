@@ -21,7 +21,8 @@ struct ProfileView: View {
     @Environment(\.tabNavigationSelectionHashValue) private var selectedNavigationTabHashValue
 
     @State private var navigationPath = NavigationPath()
-    
+    @StateObject private var dismissAction: NavigateDismissAction = .init()
+
     var body: some View {
         NavigationStack(path: $navigationPath) {
             ScrollViewReader { proxy in
@@ -42,5 +43,6 @@ struct ProfileView: View {
                 print("re-selected \(TabSelection.profile) tab")
             }
         }
+        .environmentObject(dismissAction)
     }
 }

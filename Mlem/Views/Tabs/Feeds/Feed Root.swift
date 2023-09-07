@@ -38,7 +38,7 @@ struct FeedRoot: View {
             CommunityListView(selectedCommunity: $rootDetails)
                 .id(appState.currentActiveAccount.id)
         } detail: {
-            /// Could this condtional navigation stack be causing issues with navigation path state?
+            // Could this condtional navigation stack be causing issues with navigation path state?
 //            if let rootDetails {
                 NavigationStack(path: $customNavigationPath) {
                     if let rootDetails {
@@ -115,7 +115,9 @@ struct FeedRoot: View {
 //                print("re-selected \(TabSelection.feeds) tab")
 //            }
 //        }
+        // swiftlint:disable line_length
 #warning("Watch out where sheets are presented: If a sheet is presented but is owned by a view that isn't the top view in a navigation stack, it may cause issues with user interaction because the system may think the view that presented that sheet is now the top view (onAppear will get called on that view).")
+        // swiftlint:enable line_length
 // #if DEBUG
 //        .overlay(alignment: .trailing) {
 //            GroupBox {
