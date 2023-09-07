@@ -38,25 +38,30 @@ struct FeedRoot: View {
             CommunityListView(selectedCommunity: $rootDetails)
                 .id(appState.currentActiveAccount.id)
         } detail: {
-            if let rootDetails {
-                ScrollViewReader { proxy in
-                    NavigationStack(path: $customNavigationPath) {
-                        FeedView(
-                            community: rootDetails.community,
-                            feedType: rootDetails.feedType,
-                            sortType: defaultPostSorting,
-                            showLoading: showLoading,
-                            rootDetails: $rootDetails
-                        )
-                        .environmentObject(appState)
-                        .environment(\.tabScrollViewProxy, proxy)
-                        .handleLemmyViews()
+            /// Could this condtional navigation stack be causing issues with navigation path state?
+//            if let rootDetails {
+                NavigationStack(path: $customNavigationPath) {
+                    if let rootDetails {
+                        ScrollViewReader { proxy in
+                            FeedView(
+                                community: rootDetails.community,
+                                feedType: rootDetails.feedType,
+                                sortType: defaultPostSorting,
+                                showLoading: showLoading,
+                                rootDetails: $rootDetails
+                            )
+                            .environmentObject(appState)
+                            .environment(\.tabScrollViewProxy, proxy)
+                            .handleLemmyViews()
+                            .id(rootDetails.id + appState.currentActiveAccount.id)
+                        }
+                    } else {
+                        Text("Please select a community")
                     }
                 }
-                .id(rootDetails.id + appState.currentActiveAccount.id)
-            } else {
-                Text("Please select a community") 
-            }
+//            } else {
+//                Text("Please select a community")
+//            }
         }
         .handleLemmyLinkResolution(
             navigationPath: $navigationPath
@@ -110,21 +115,22 @@ struct FeedRoot: View {
 //                print("re-selected \(TabSelection.feeds) tab")
 //            }
 //        }
- #if DEBUG
-        .overlay(alignment: .trailing) {
-            GroupBox {
-                Text("NavigationPath.count: \(customNavigationPath.count)")
-            }
-            .onTapGesture {
-                isPresentingNavigationDebugSheet = true
-            }
-        }
-        .sheet(isPresented: $isPresentingNavigationDebugSheet) {
-            List {
-                Text(dismissAction.context ?? "No debug context")
-            }
-        }
- #endif
+#warning("Watch out where sheets are presented: If a sheet is presented but is owned by a view that isn't the top view in a navigation stack, it may cause issues with user interaction because the system may think the view that presented that sheet is now the top view (onAppear will get called on that view).")
+// #if DEBUG
+//        .overlay(alignment: .trailing) {
+//            GroupBox {
+//                Text("NavigationPath.count: \(customNavigationPath.count)")
+//            }
+//            .onTapGesture {
+//                isPresentingNavigationDebugSheet = true
+//            }
+//        }
+//        .sheet(isPresented: $isPresentingNavigationDebugSheet) {
+//            List {
+//                Text(dismissAction.context ?? "No debug context")
+//            }
+//        }
+// #endif
     }
 }
 
