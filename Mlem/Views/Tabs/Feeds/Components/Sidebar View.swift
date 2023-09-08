@@ -10,6 +10,8 @@ import SwiftUI
 struct CommunitySidebarView: View {
     
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject private var dismissAction: NavigateDismissAction
+    @Environment(\.dismiss) private var dismiss
     
     // parameters
     let community: APICommunity
@@ -31,6 +33,9 @@ struct CommunitySidebarView: View {
         }
         .navigationTitle("Sidebar")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            dismissAction.dismiss = dismiss
+        }
         .task(priority: .userInitiated) {
             // Load community details if they weren't provided
             // when we loaded

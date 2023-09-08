@@ -67,18 +67,18 @@ struct UserView: View {
             .onAppear {
                 dismissAction.dismiss = dismiss
             }
-            .onChange(of: selectedNavigationTabHashValue) { newValue in
-                if newValue == TabSelection.profile.hashValue {
-                    print("re-selected \(TabSelection.profile) tab")
-                    if navigationPath.wrappedValue.isEmpty {
-                        withAnimation {
-                            scrollViewProxy?.scrollTo(scrollToTop, anchor: .bottom)
-                        }
-                    } else {
-                        navigationPath.wrappedValue.goBack()
-                    }
-                }
-            }
+//            .onChange(of: selectedNavigationTabHashValue) { newValue in
+//                if newValue == TabSelection.profile.hashValue {
+//                    print("re-selected \(TabSelection.profile) tab")
+//                    if navigationPath.wrappedValue.isEmpty {
+//                        withAnimation {
+//                            scrollViewProxy?.scrollTo(scrollToTop, anchor: .bottom)
+//                        }
+//                    } else {
+//                        navigationPath.wrappedValue.goBack()
+//                    }
+//                }
+//            }
     }
 
     @ViewBuilder

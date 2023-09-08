@@ -28,9 +28,11 @@ struct SearchView: View {
     @State private var searchPage: Int = 1
     @State private var hasMorePages: Bool = true
     
+    @State private var customNavigationPath: [MlemRoutes] = []
     @State private var navigationPath = NavigationPath()
     @StateObject private var dismissAction: NavigateDismissAction = .init()
-
+    @State private var scrollToTopAppeared: Bool = true
+    
     @Namespace var scrollToTop
     private var scrollToId: (any Hashable)? {
         if showRecentSearches {
@@ -44,27 +46,48 @@ struct SearchView: View {
     private let searchPageSize = 50
 
     var body: some View {
-        NavigationStack(path: $navigationPath) {
-            ScrollViewReader { proxy in
+        // NOTE: It appears we need to put navigation path/dismiss action env vars in parent, then apply tab bar navigation modifier on nested navigation stack...
+        ScrollViewReader { proxy in
+            NavigationStack(path: $customNavigationPath) {
                 content
                     .handleLemmyViews()
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationBarColor()
                     .navigationTitle("Search")
-                    .onChange(of: selectedNavigationTabHashValue) { newValue in
-                        if newValue == TabSelection.search.hashValue {
-                            print("re-selected \(TabSelection.search) tab")
-                            if navigationPath.isEmpty, let scrollToId {
-                                withAnimation {
-                                    proxy.scrollTo(scrollToId, anchor: .bottom)
-                                }
-                            } else {
-                                navigationPath.goBack()
-                            }
+                //                    .onChange(of: selectedNavigationTabHashValue) { newValue in
+                //                        if newValue == TabSelection.search.hashValue {
+                //                            print("re-selected \(TabSelection.search) tab")
+                //                            if navigationPath.isEmpty, let scrollToId {
+                //                                withAnimation {
+                //                                    proxy.scrollTo(scrollToId, anchor: .bottom)
+                //                                }
+                //                            } else {
+                //                                navigationPath.goBack()
+                //                            }
+                //                        }
+                //                    }
+            }
+            .tabBarNavigationEnabled(
+                .search,
+                scrollToTopAppeared: $scrollToTopAppeared,
+                popToSidebar: {
+                    // not applicable
+                },
+                scrollToTop: {
+                    if let scrollToId {
+                        withAnimation {
+                            proxy.scrollTo(
+                                scrollToId,
+                                anchor: .bottom)
                         }
                     }
-            }
+                },
+                goBack: {
+                    dismissAction.dismiss?()
+                }
+            )
         }
+        .environment(\.customNavigationPath, $customNavigationPath)
         .environmentObject(dismissAction)
         .handleLemmyLinkResolution(navigationPath: $navigationPath)
         .searchable(text: getSearchTextBinding(), prompt: "Search for communities")
@@ -78,6 +101,13 @@ struct SearchView: View {
                 print("switched to Search tab")
             }
         }
+#if DEBUG
+        .overlay(alignment: .trailing) {
+            GroupBox {
+                Text("NavigationPath.count: \(customNavigationPath.count)")
+            }
+        }
+#endif
     }
     
     @ViewBuilder

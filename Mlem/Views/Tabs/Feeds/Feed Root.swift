@@ -105,6 +105,21 @@ struct FeedRoot: View {
                 }
             }
         }
+#if DEBUG
+        .overlay(alignment: .trailing) {
+            GroupBox {
+                Text("NavigationPath.count: \(customNavigationPath.count)")
+            }
+            //            .onTapGesture {
+            //                isPresentingNavigationDebugSheet = true
+            //            }
+        }
+        //        .sheet(isPresented: $isPresentingNavigationDebugSheet) {
+        //            List {
+        //                Text(dismissAction.context ?? "No debug context")
+        //            }
+        //        }
+#endif
 //        .onChange(of: selectedTagHashValue) { newValue in
 //            if newValue == TabSelection.feeds.hashValue {
 //                print("switched to Feed tab")
@@ -118,21 +133,6 @@ struct FeedRoot: View {
         // swiftlint:disable line_length
 #warning("Watch out where sheets are presented: If a sheet is presented but is owned by a view that isn't the top view in a navigation stack, it may cause issues with user interaction because the system may think the view that presented that sheet is now the top view (onAppear will get called on that view).")
         // swiftlint:enable line_length
-// #if DEBUG
-//        .overlay(alignment: .trailing) {
-//            GroupBox {
-//                Text("NavigationPath.count: \(customNavigationPath.count)")
-//            }
-//            .onTapGesture {
-//                isPresentingNavigationDebugSheet = true
-//            }
-//        }
-//        .sheet(isPresented: $isPresentingNavigationDebugSheet) {
-//            List {
-//                Text(dismissAction.context ?? "No debug context")
-//            }
-//        }
-// #endif
     }
 }
 

@@ -11,6 +11,10 @@ import SwiftUI
  A view that displays the list of communities a user moderates
  */
 struct UserModeratorView: View {
+    
+    @EnvironmentObject private var dismissAction: NavigateDismissAction
+    @Environment(\.dismiss) private var dismiss
+    
     // parameters
     var userDetails: APIPersonView
     var moderatedCommunities: [APICommunityModeratorView]
@@ -27,5 +31,8 @@ struct UserModeratorView: View {
         .navigationBarTitleDisplayMode(.inline)
         .headerProminence(.standard)
         .listStyle(.plain)
+        .onAppear {
+            dismissAction.dismiss = dismiss
+        }
     }
 }

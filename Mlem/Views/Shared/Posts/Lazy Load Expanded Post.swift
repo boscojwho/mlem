@@ -14,6 +14,8 @@ import SwiftUI
 struct LazyLoadExpandedPost: View {
     
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject private var dismissAction: NavigateDismissAction
+    @Environment(\.dismiss) private var dismiss
     
     @State var post: APIPost
     
@@ -28,6 +30,9 @@ struct LazyLoadExpandedPost: View {
                     .environmentObject(postTracker)
             } else {
                 progressView
+                    .onAppear {
+                        dismissAction.dismiss = dismiss
+                    }
             }
         }
     }

@@ -19,18 +19,33 @@ struct ProfileView: View {
     
     @Environment(\.tabSelectionHashValue) private var selectedTagHashValue
     @Environment(\.tabNavigationSelectionHashValue) private var selectedNavigationTabHashValue
-
+    
+    @State private var customNavigationPath: [MlemRoutes] = []
     @State private var navigationPath = NavigationPath()
     @StateObject private var dismissAction: NavigateDismissAction = .init()
-
+    @State private var scrollToTopAppeared: Bool = true
+    
     var body: some View {
-        NavigationStack(path: $navigationPath) {
-            ScrollViewReader { proxy in
+        ScrollViewReader { proxy in
+            NavigationStack(path: $customNavigationPath) {
                 UserView(userID: userID)
                     .handleLemmyViews()
                     .environment(\.tabScrollViewProxy, proxy)
                     .environment(\.navigationPath, $navigationPath)
             }
+            .tabBarNavigationEnabled(
+                .profile,
+                scrollToTopAppeared: $scrollToTopAppeared,
+                popToSidebar: {
+                    // not applicable.
+                },
+                scrollToTop: {
+                    // todo
+                },
+                goBack: {
+                    dismissAction.dismiss?()
+                }
+            )
         }
         .handleLemmyLinkResolution(navigationPath: $navigationPath)
         .onChange(of: selectedTagHashValue) { newValue in
@@ -38,11 +53,19 @@ struct ProfileView: View {
                 print("switched to Profile tab")
             }
         }
-        .onChange(of: selectedNavigationTabHashValue) { newValue in
-            if newValue == TabSelection.profile.hashValue {
-                print("re-selected \(TabSelection.profile) tab")
+//        .onChange(of: selectedNavigationTabHashValue) { newValue in
+//            if newValue == TabSelection.profile.hashValue {
+//                print("re-selected \(TabSelection.profile) tab")
+//            }
+//        }
+        .environmentObject(dismissAction)
+        .environment(\.customNavigationPath, $customNavigationPath)
+#if DEBUG
+        .overlay(alignment: .trailing) {
+            GroupBox {
+                Text("NavigationPath.count: \(customNavigationPath.count)")
             }
         }
-        .environmentObject(dismissAction)
+#endif
     }
 }

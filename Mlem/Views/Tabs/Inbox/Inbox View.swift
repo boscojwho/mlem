@@ -79,7 +79,9 @@ struct InboxView: View {
     
     // utility
     @State private var navigationPath = NavigationPath()
+    @State private var customNavigationPath: [MlemRoutes] = []
     @StateObject private var dismissAction: NavigateDismissAction = .init()
+    @State private var scrollToTopAppeared = false
 
     private var scrollToTopId: Int? {
         switch curTab {
@@ -96,8 +98,8 @@ struct InboxView: View {
     
     var body: some View {
         // NOTE: there appears to be a SwiftUI issue with segmented pickers stacked on top of ScrollViews which causes the tab bar to appear fully transparent. The internet suggests that this may be a bug that only manifests in dev mode, so, unless this pops up in a build, don't worry about it. If it does manifest, we can either put the Picker *in* the ScrollView (bad because then you can't access it without scrolling to the top) or put a Divider() at the bottom of the VStack (bad because then the material tab bar doesn't show)
-        NavigationStack(path: $navigationPath) {
-            ScrollViewReader { proxy in
+        ScrollViewReader { proxy in
+            NavigationStack(path: $customNavigationPath) {
                 contentView
                     .navigationTitle("Inbox")
                     .navigationBarTitleDisplayMode(.inline)
@@ -112,21 +114,46 @@ struct InboxView: View {
                             print("switched to inbox tab")
                         }
                     }
-                    .onChange(of: selectedNavigationTabHashValue) { newValue in
-                        if newValue == TabSelection.inbox.hashValue {
-                            print("re-selected \(TabSelection.inbox) tab")
-                            if navigationPath.isEmpty, let scrollToTopId {
-                                withAnimation {
-                                    proxy.scrollTo(scrollToTopId, anchor: .bottom)
-                                }
-                            } else {
-                                navigationPath.goBack()
-                            }
-                        }
+//                    .onChange(of: selectedNavigationTabHashValue) { newValue in
+//                        if newValue == TabSelection.inbox.hashValue {
+//                            print("re-selected \(TabSelection.inbox) tab")
+//                            if navigationPath.isEmpty, let scrollToTopId {
+//                                withAnimation {
+//                                    proxy.scrollTo(scrollToTopId, anchor: .bottom)
+//                                }
+//                            } else {
+//                                navigationPath.goBack()
+//                            }
+//                        }
+//                    }
+            }
+            .tabBarNavigationEnabled(
+                .inbox,
+                scrollToTopAppeared: $scrollToTopAppeared,
+                popToSidebar: {
+                    // not applicable.
+                },
+                scrollToTop: {
+                    withAnimation {
+                        proxy.scrollTo(
+                            scrollToTopId,
+                            anchor: .bottom)
                     }
+                },
+                goBack: {
+                    dismissAction.dismiss?()
+                }
+            )
+        }
+        .environment(\.customNavigationPath, $customNavigationPath)
+        .environmentObject(dismissAction)
+#if DEBUG
+        .overlay(alignment: .trailing) {
+            GroupBox {
+                Text("NavigationPath.count: \(customNavigationPath.count)")
             }
         }
-        .environmentObject(dismissAction)
+#endif
     }
     
     @ViewBuilder var contentView: some View {
