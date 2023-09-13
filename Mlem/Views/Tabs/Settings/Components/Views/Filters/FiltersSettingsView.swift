@@ -9,6 +9,8 @@ import Dependencies
 import SwiftUI
 
 struct FiltersSettingsView: View {
+    @AppStorage("showSettingsIcons") var showSettingsIcons: Bool = true
+    
     @Dependency(\.errorHandler) var errorHandler
     @Dependency(\.persistenceRepository) var persistenceRepository
     
@@ -54,7 +56,13 @@ struct FiltersSettingsView: View {
                 Button {
                     isShowingKeywordImporter = true
                 } label: {
-                    Label("Import Filters", systemImage: "square.and.arrow.down")
+                    Label {
+                        Text("Import Filters")
+                    } icon: {
+                        if showSettingsIcons {
+                            Image(systemName: "square.and.arrow.down")
+                        }
+                    }
                 }
                 .fileImporter(isPresented: $isShowingKeywordImporter, allowedContentTypes: [.json]) { result in
                     do {
@@ -100,9 +108,15 @@ struct FiltersSettingsView: View {
                 Button(role: .destructive) {
                     isShowingFilterDeletionConfirmation = true
                 } label: {
-                    Label("Delete All Filters", systemImage: "trash")
-                        .foregroundColor(.red)
-                        .opacity(filtersTracker.filteredKeywords.isEmpty ? 0.6 : 1)
+                    Label {
+                        Text("Delete All Filters")
+                    } icon: {
+                        if showSettingsIcons {
+                            Image(systemName: "trash")
+                        }
+                    }
+                    .foregroundColor(.red)
+                    .opacity(filtersTracker.filteredKeywords.isEmpty ? 0.6 : 1)
                 }
                 .disabled(filtersTracker.filteredKeywords.isEmpty)
                 .confirmationDialog(
