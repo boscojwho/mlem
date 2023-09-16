@@ -23,8 +23,6 @@ struct Window: View {
     /// This is only here so that sheet views that double as navigation views don't crash when they expect a navigation object. [2023.09]
     @StateObject private var navigation: Navigation = .init()
     @StateObject var appState: AppState = .init()
-    /// This is only here so that sheet views that double as navigation views don't crash when they expect a navigation object. [2023.09]
-    @StateObject private var navigation: Navigation = .init()
 
     @State var flow: AppFlow
 
